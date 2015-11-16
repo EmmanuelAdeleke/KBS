@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<myDatabase>
+    <Availability>
+        <product_id>1</product_id>
+        <store_id>111</store_id>
+        <quantity>2</quantity>
+    </Availability>
+    <Availability>
+        <product_id>1</product_id>
+        <store_id>112</store_id>
+        <quantity>6</quantity>
+    </Availability>
+    <Availability>
+        <product_id>1</product_id>
+        <store_id>113</store_id>
+        <quantity>35</quantity>
+    </Availability>
+    <Availability>
+        <product_id>2</product_id>
+        <store_id>111</store_id>
+        <quantity>34</quantity>
+    </Availability>
+    <Availability>
+        <product_id>2</product_id>
+        <store_id>112</store_id>
+        <quantity>6</quantity>
+    </Availability>
+    <Availability>
+        <product_id>2</product_id>
+        <store_id>113</store_id>
+        <quantity>8</quantity>
+    </Availability>
+    <Availability>
+        <product_id>3</product_id>
+        <store_id>111</store_id>
+        <quantity>44</quantity>
+    </Availability>
+    <Availability>
+        <product_id>3</product_id>
+        <store_id>112</store_id>
+        <quantity>5</quantity>
+    </Availability>
+    <Availability>
+        <product_id>3</product_id>
+        <store_id>113</store_id>
+        <quantity>43</quantity>
+    </Availability>
+    <Availability>
+        <product_id>4</product_id>
+        <store_id>111</store_id>
+        <quantity>5</quantity>
+    </Availability>
+    <Availability>
+        <product_id>4</product_id>
+        <store_id>112</store_id>
+        <quantity>3</quantity>
+    </Availability>
+    <Availability>
+        <product_id>4</product_id>
+        <store_id>113</store_id>
+        <quantity>23</quantity>
+    </Availability>
+    <Availability>
+        <product_id>5</product_id>
+        <store_id>111</store_id>
+        <quantity>8</quantity>
+    </Availability>
+    <Availability>
+        <product_id>5</product_id>
+        <store_id>112</store_id>
+        <quantity>5</quantity>
+    </Availability>
+    <Availability>
+        <product_id>5</product_id>
+        <store_id>113</store_id>
+        <quantity>1</quantity>
+    </Availability>
+    <Availability>
+        <product_id>6</product_id>
+        <store_id>111</store_id>
+        <quantity>4</quantity>
+    </Availability>
+    <Availability>
+        <product_id>6</product_id>
+        <store_id>112</store_id>
+        <quantity>8</quantity>
+    </Availability>
+    <Availability>
+        <product_id>6</product_id>
+        <store_id>113</store_id>
+        <quantity>0</quantity>
+    </Availability>
+    <Availability>
+        <product_id>7</product_id>
+        <store_id>111</store_id>
+        <quantity>43</quantity>
+    </Availability>
+    <Availability>
+        <product_id>7</product_id>
+        <store_id>112</store_id>
+        <quantity>1</quantity>
+    </Availability>
+    <Availability>
+        <product_id>7</product_id>
+        <store_id>113</store_id>
+        <quantity>23</quantity>
+    </Availability>
+    <Availability>
+        <product_id>8</product_id>
+        <store_id>111</store_id>
+        <quantity>5</quantity>
+    </Availability>
+    <Availability>
+        <product_id>8</product_id>
+        <store_id>112</store_id>
+        <quantity>1</quantity>
+    </Availability>
+    <Availability>
+        <product_id>8</product_id>
+        <store_id>113</store_id>
+        <quantity>2</quantity>
+    </Availability>
+    <Availability>
+        <product_id>9</product_id>
+        <store_id>111</store_id>
+        <quantity>45</quantity>
+    </Availability>
+    <Availability>
+        <product_id>9</product_id>
+        <store_id>112</store_id>
+        <quantity>23</quantity>
+    </Availability>
+    <Availability>
+        <product_id>9</product_id>
+        <store_id>113</store_id>
+        <quantity>31</quantity>
+    </Availability>
+  
+    <Product>
+        <id>1</id>
+        <category>SmartWatch</category>
+        <name>Pebble Time</name>
+        <brand>Pebble</brand>
+        <colour>Black</colour>
+        <description>Still a watch. Just smarter.</description>
+    </Product>
+    <Product>
+        <id>2</id>
+        <category>SmartWatch</category>
+        <name>Moto 360 2015</name>
+        <brand>Motorola</brand>
+        <colour>Black</colour>
+        <description>Carefully crafted inside and out, so that you can keep going � even without your phone.</description>
+    </Product>
+    <Product>
+        <id>3</id>
+        <category>SmartWatch</category>
+        <name>Apple Watch Sport</name>
+        <brand>Apple</brand>
+        <colour>Orange</colour>
+        <description>Apple Watch. The most personal product we've ever made, because it's the first one designed to be worn.</description>
+    </Product>
+    <Product>
+        <id>4</id>
+        <category>SmartGlasses</category>
+        <name>CastAR</name>
+        <brand>CastAR</brand>
+        <colour>Dark Grey</colour>
+        <description>Part of what makes CastAR unique is the additional component called Magic Wand that helps you interact with the augmented world.</description>
+    </Product>
+    <Product>
+        <id>5</id>
+        <category>SmartGlasses</category>
+        <name>Laster SeeThru</name>
+        <brand>Laster</brand>
+        <colour>White</colour>
+        <description>Wireless, augmented, reality, eyewear.</description>
+    </Product>
+    <Product>
+        <id>6</id>
+        <category>SmartHeadphones</category>
+        <name>Sony MW1 Smart Headset Pro</name>
+        <brand>Sony</brand>
+        <colour>Black</colour>
+        <description>The multifunction premium Bluetooth stereo headset that works as an Android remote control.</description>
+    </Product>
+    <Product>
+        <id>7</id>
+        <category>SmartHeadphones</category>
+        <name>The White Dash</name>
+        <brand>Bragi</brand>
+        <colour>White</colour>
+        <description>Run, cycle, swin, enjoy... Experience the world�s first wireless smart earphones.</description>
+    </Product>
+    <Product>
+        <id>8</id>
+        <category>SmartJackets</category>
+        <name>Travel Jacket</name>
+        <brand>BauBax</brand>
+        <colour>Blue</colour>
+        <description>TRAVEL JACKET with Neck Pillow, Eye Mask, Gloves, Drink Pocket, Tech Pockets, etc. Comes in 4 Styles</description>
+    </Product>
+    <Product>
+        <id>9</id>
+        <category>SmartJackets</category>
+        <name>Travel Lite</name>
+        <brand>BauBax</brand>
+        <colour>Olive</colour>
+        <description>Travel smart and light... with BauBax's Lite Smart Jacket.</description>
+    </Product>
+ 
+    <Store>
+        <name>Wearables for you</name>
+        <address>30 The Broadway</address>
+        <postcode>W5 2NP</postcode>
+        <city>London</city>
+        <region>Greater London</region>
+        <phone_number>0208519376</phone_number>
+        <opening_times>Mon - Fri, 9am - 5pm</opening_times>
+        <lat>51.513965</lat>
+        <long>-0.302291</long>
+        <id>111</id>
+    </Store>
+    <Store>
+        <name>Gadgetology</name>
+        <address>4006 Ariel Way</address>
+        <postcode>W12 7GF</postcode>
+        <city>London</city>
+        <region>Greater London</region>
+        <phone_number>0203371230</phone_number>
+        <opening_times>Mon - Sat, 9am - 6pm</opening_times>
+        <lat>51.507972</lat>
+        <long>-0.220156</long>
+        <id>112</id>
+    </Store>
+    <Store>
+        <name>PC Galaxy</name>
+        <address>Wood St, King</address>
+        <postcode>KT1 1TP</postcode>
+        <city>London</city>
+        <region>Surrey</region>
+        <phone_number>0843000900</phone_number>
+        <opening_times>Mon - Sat, 8am - 7pm</opening_times>
+        <lat>51.411771</lat>
+        <long>-0.30479</long>
+        <id>113</id>
+    </Store>
+</myDatabase>
