@@ -55,7 +55,7 @@ public class Database {
     @XmlElement(name = "Availability", required = true)
     protected List<Availability> availability;
 
-    
+    // Return all Product objects in the database
     public List<Product> getProducts() {
         if (product == null) {
             product = new ArrayList<Product>();
@@ -63,14 +63,14 @@ public class Database {
         return this.product;
     }
 
-
+    // Return all Store objects in the database
     public List<Store> getStores() {
         if (store == null) {
             store = new ArrayList<Store>();
         }
         return this.store;
     }
-
+    // Return all Availability objects in the database
     public List<Availability> getAvailability() {
         if (availability == null) {
             availability = new ArrayList<Availability>();
@@ -81,7 +81,7 @@ public class Database {
     public Product getProdById(BigInteger id) {
     	Product prodFound = null;
     	for	(int i = 0; i < product.size(); i++){
-    		if(product.get(i).getId() == id){
+    		if(product.get(i).getId().compareTo(id) == 0){
     			prodFound = product.get(i);
     			break;
     		}
@@ -92,7 +92,7 @@ public class Database {
     public Store getStoreById(BigInteger id) {
     	Store storeFound = null;
     	for	(int i = 0; i < store.size(); i++){
-    		if(store.get(i).getId() == id){
+    		if(store.get(i).getId().compareTo(id) == 0){
     			storeFound = store.get(i);
     			break;
     		}
@@ -113,7 +113,7 @@ public class Database {
     	return stock;
     }
     
-    public List<Store> getStoresWhereProdIsAvailable(BigInteger prodId) {
+    public List<Store> getStoresWithProd(BigInteger prodId) {
     	List<Store> stores = new ArrayList<Store>();
     	BigInteger zero = BigInteger.valueOf(0);
     	BigInteger storeId;

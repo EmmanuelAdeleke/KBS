@@ -67,7 +67,7 @@ public class Reasoner {
 		
 		List<Store> avStores;
 		System.out.println("Stores with product of id " + prodId);
-		avStores = myDatabase.getStoresWhereProdIsAvailable(prodId);
+		avStores = myDatabase.getStoresWithProd(prodId);
 		for(int i = 0; i < avStores.size(); i++) {
 			System.out.println(avStores.get(i));
 		}
