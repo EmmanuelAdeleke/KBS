@@ -39,7 +39,7 @@ public class JAXB_XMLParser {
 		} 
 		catch (JAXBException e) {
 			e.printStackTrace();
-			System.out.println("problem loadXML");
+			System.out.println("Error loading XML");
 		}
 		return null;
 	}

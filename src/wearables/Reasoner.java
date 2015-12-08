@@ -29,8 +29,8 @@ public class Reasoner {
 		
 		myDatabase = xmlhandler.loadXML(readthatfile);
 		
-		itemList = myDatabase.getProduct();
-		storeList = myDatabase.getStore();
+		itemList = myDatabase.getProducts();
+		storeList = myDatabase.getStores();
 		availabilityList = myDatabase.getAvailability();
 	}
 	

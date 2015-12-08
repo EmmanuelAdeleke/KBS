@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  * 
- * This database holds all elements stored in the Wearables.xml
+ * This database holds all elements stored in the Wearables
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -54,7 +54,7 @@ public class Database {
     protected List<Availability> availability;
 
     
-    public List<Product> getProduct() {
+    public List<Product> getProducts() {
         if (product == null) {
             product = new ArrayList<Product>();
         }
@@ -62,7 +62,7 @@ public class Database {
     }
 
 
-    public List<Store> getStore() {
+    public List<Store> getStores() {
         if (store == null) {
             store = new ArrayList<Store>();
         }
