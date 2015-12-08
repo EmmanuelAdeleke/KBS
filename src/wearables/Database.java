@@ -124,7 +124,10 @@ public class Database {
     	List<Product> prods = new ArrayList<Product>();
     	Product prod;
     	int matchNo;
+    	// This will hold a reference to each product and how much it matches the keyword
     	final HashMap<BigInteger, Integer> hm = new HashMap<BigInteger, Integer>();
+    	
+    	// Get all products that match the keyword in some way
     	for	(int i = 0; i < product.size(); i++){
     		prod = product.get(i);
     		matchNo = prodKeywordMatch(prod, keyword);
@@ -133,6 +136,8 @@ public class Database {
     			prods.add(product.get(i));
     		}
     	}
+    	
+    	//Sort the list by match number using the hash map hm.
     	Collections.sort(prods, new Comparator<Object>() {
 			@Override
 			public int compare(final Object prod1, final Object prod2) {
@@ -141,6 +146,8 @@ public class Database {
 				return (match1 < match2) ? 1 : -1;
 			}
     	});
+    	
+    	//Return sorted list
     	return prods;
     }
     
