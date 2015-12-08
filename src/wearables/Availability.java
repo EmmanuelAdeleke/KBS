@@ -9,6 +9,7 @@
 package wearables;
 
 import java.math.BigInteger;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -73,6 +74,12 @@ public class Availability {
 
     public void setQuantity(BigInteger value) {
         this.quantity = value;
+    }
+    
+    public String toString() {
+    	return "Prod_ID: " + productId +
+    			"\tStore_ID: " + storeId + 
+    			"\tQty: " + quantity ;
     }
 
 }

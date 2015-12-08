@@ -10,6 +10,7 @@ package wearables;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -158,6 +159,16 @@ public class Store {
     
     public void setId(BigInteger value) {
         this.id = value;
+    }
+    
+    public String toString() {
+    	return "ID: " + id +
+    			"Name: " + name + 
+    			"\tAddress: " + address +
+    			"\tPostcode: " + postcode + 
+    			"\tCity: " + city + 
+    			"\tRegion: " + region + 
+    			"\tOpening Times: " + openingTimes ;
     }
 
 }

@@ -8,14 +8,14 @@ import java.util.List;
 
 public class Reasoner {
 
-	public List<Product> itemList;
+	public List<Product> prodList;
 	public List<Store> storeList;
 	public List<Availability> availabilityList;
 	public Database myDatabase;
 	public File xmlFile;
 	
 	public Reasoner(String fileName) {
-		itemList = new ArrayList<>();
+		prodList = new ArrayList<>();
 		storeList = new ArrayList<>();
 		availabilityList = new ArrayList<>();
 		xmlFile = new File(fileName + ".xml");
@@ -29,7 +29,7 @@ public class Reasoner {
 		
 		myDatabase = xmlhandler.loadXML(readthatfile);
 		
-		itemList = myDatabase.getProducts();
+		prodList = myDatabase.getProducts();
 		storeList = myDatabase.getStores();
 		availabilityList = myDatabase.getAvailability();
 	}
@@ -38,8 +38,8 @@ public class Reasoner {
 		Reasoner reasoner = new Reasoner("Wearables");
 		reasoner.init();
 		
-		for(int i = 0; i < reasoner.itemList.size(); i++) {
-			System.out.println(reasoner.itemList.get(i));
+		for(int i = 0; i < reasoner.prodList.size(); i++) {
+			System.out.println(reasoner.prodList.get(i));
 		}
 		
 		for(int i = 0; i < reasoner.storeList.size(); i++) {
