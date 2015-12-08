@@ -1,21 +1,42 @@
-How many
-how much 
-what's the cost
-count
-show me
-What products do you have
-which store has
-what's the total stock
-describe this product
-where is the store
-where can I find
-what's the closest store to
-what are the opening times
-what's the postcode of 
-when is this store open
-Are there any stores in
-Are there any "product" in "store"
-Do you have any "description"
-search
-find
-show all "category"
+How many howMany
+how much howMuch
+what's the cost howMuch
+count howMany
+show me show
+What products do you have show
+which store has where
+what's the total stock howMany
+describe this product show
+where is the store where
+where can I find where
+what's the closest store to where
+what are the opening times show
+what's the postcode of show
+when is this store open show
+Are there any stores in where
+Are there any "product" in "store" howMany
+Do you have any "description" howMany
+search /needs further analysis
+find /needs further analysis
+show all "category" show
+
+Question categories:
+storeDistance
+showListing
+priceQuery
+showDetails
+
+where (can I find, is the nearest)
+ - storeDistance
+ - showListing (of stores with specific product)
+howMany (products in store, of specific product overall, of specific product in specific store, store overall, of a specific product, stores in, stores open after,
+ - stockQuery
+ - showListing
+howMuch
+  - priceQuery (Category or product)
+show
+  - showListing
+  - storeDistance
+  - stockQuery
+  - priceQuery
+  - detailsQuery

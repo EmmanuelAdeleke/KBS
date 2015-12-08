@@ -115,8 +115,8 @@ public class Database {
     	}
     	return storeFound;
     }
-    
-  //====================== Get content from keywords ==========================//
+  //========================== END of content from ID ===============================//
+  //========================== Get content from keywords ===============================//
     //helper function
     boolean twoWayContain(String s1, String s2) {
     	boolean val = false;
@@ -221,6 +221,7 @@ public class Database {
     	//Return sorted list
     	return stores;
     }
+  //========================== END of content from Keyword ===============================//
     
     public BigInteger getProdStockInStore(BigInteger prodId, BigInteger storeId) {
     	BigInteger stock = BigInteger.valueOf(0);
