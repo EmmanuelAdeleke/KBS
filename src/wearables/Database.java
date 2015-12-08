@@ -195,10 +195,10 @@ public class Database {
     	List<Store> stores = new ArrayList<Store>();
     	Store astore;
     	int matchNo;
-    	// This will hold a reference to each product and how much it matches the keyword
+    	// This will hold a reference to each store and how much it matches the keyword
     	final HashMap<BigInteger, Integer> hm = new HashMap<BigInteger, Integer>();
     	
-    	// Get all products that match the keyword in some way
+    	// Get all stores that match the keyword in some way
     	for	(int i = 0; i < store.size(); i++){
     		astore = store.get(i);
     		matchNo = storeKeywordMatch(astore, keyword);
