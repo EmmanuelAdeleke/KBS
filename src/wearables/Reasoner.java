@@ -3,16 +3,17 @@ package wearables;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Reasoner {
 
-	public List<Product> prodList;
-	public List<Store> storeList;
-	public List<Availability> availabilityList;
-	public Database myDatabase;
-	public File xmlFile;
+	public static List<Product> prodList;
+	public static List<Store> storeList;
+	public static List<Availability> availabilityList;
+	public static Database myDatabase;
+	public static File xmlFile;
 	
 	public Reasoner(String fileName) {
 		prodList = new ArrayList<>();
@@ -38,17 +39,46 @@ public class Reasoner {
 		Reasoner reasoner = new Reasoner("Wearables");
 		reasoner.init();
 		
-		for(int i = 0; i < reasoner.prodList.size(); i++) {
-			System.out.println(reasoner.prodList.get(i));
+//		for(int i = 0; i < reasoner.prodList.size(); i++) {
+//			System.out.println(reasoner.prodList.get(i));
+//		}
+//		
+//		for(int i = 0; i < reasoner.storeList.size(); i++) {
+//			System.out.println(reasoner.storeList.get(i));
+//		}
+//		
+//		for(int i = 0; i < reasoner.availabilityList.size(); i++) {
+//			System.out.println(reasoner.availabilityList.get(i));
+//		}
+		
+		BigInteger prodId = prodList.get(0).getId();
+		System.out.println("Product with id: " + prodId);
+		System.out.println(myDatabase.getProdById(prodId));
+		System.out.println("");
+		
+		BigInteger storeId = storeList.get(0).getId();
+		System.out.println("Store with id: " + storeId);
+		System.out.println(myDatabase.getStoreById(storeId));
+		System.out.println("");
+		
+		System.out.println("Getting availability of product of id " + prodId + " in store with id " + storeId + ".");
+		System.out.println(myDatabase.getProdStockInStore(prodId, storeId));
+		System.out.println("");
+		
+		List<Store> avStores;
+		System.out.println("Stores with product of id " + prodId);
+		avStores = myDatabase.getStoresWhereProdIsAvailable(prodId);
+		for(int i = 0; i < avStores.size(); i++) {
+			System.out.println(avStores.get(i));
 		}
 		
-		for(int i = 0; i < reasoner.storeList.size(); i++) {
-			System.out.println(reasoner.storeList.get(i));
+		List<Product> avProd;
+		System.out.println("Getting products in store " + storeId);
+		avProd = myDatabase.getStoreProducts(storeId);
+		for(int i = 0; i < avProd.size(); i++) {
+			System.out.println(avProd.get(i));
 		}
 		
-		for(int i = 0; i < reasoner.availabilityList.size(); i++) {
-			System.out.println(reasoner.availabilityList.get(i));
-		}
 		
 	}
 	

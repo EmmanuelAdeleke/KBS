@@ -8,8 +8,10 @@
 
 package wearables;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -74,6 +76,71 @@ public class Database {
             availability = new ArrayList<Availability>();
         }
         return this.availability;
+    }
+    
+    public Product getProdById(BigInteger id) {
+    	Product prodFound = null;
+    	for	(int i = 0; i < product.size(); i++){
+    		if(product.get(i).getId() == id){
+    			prodFound = product.get(i);
+    			break;
+    		}
+    	}
+    	return prodFound;
+    }
+    
+    public Store getStoreById(BigInteger id) {
+    	Store storeFound = null;
+    	for	(int i = 0; i < store.size(); i++){
+    		if(store.get(i).getId() == id){
+    			storeFound = store.get(i);
+    			break;
+    		}
+    	}
+    	return storeFound;
+    }
+    
+    public BigInteger getProdStockInStore(BigInteger prodId, BigInteger storeId) {
+    	BigInteger stock = BigInteger.valueOf(0);
+    	for	(int i = 0; i < availability.size(); i++){
+    		//If same prodId and same store
+    		if(availability.get(i).getProductId().compareTo(prodId) == 0 && 
+    				availability.get(i).getStoreId().compareTo(storeId) == 0){
+    			stock = availability.get(i).getQuantity();
+    			break;
+    		}
+    	}
+    	return stock;
+    }
+    
+    public List<Store> getStoresWhereProdIsAvailable(BigInteger prodId) {
+    	List<Store> stores = new ArrayList<Store>();
+    	BigInteger zero = BigInteger.valueOf(0);
+    	BigInteger storeId;
+    	for	(int i = 0; i < availability.size(); i++){
+    		// If same prodId and quantity > 0
+    		if(availability.get(i).getProductId().compareTo(prodId) == 0 && 
+    				availability.get(i).getQuantity().compareTo(zero) > 0){
+    			storeId = availability.get(i).getStoreId();
+    			stores.add(getStoreById(storeId));
+    		}
+    	}
+    	return stores;
+    }
+    
+    public List<Product> getStoreProducts(BigInteger storeId) {
+    	List<Product> products = new ArrayList<Product>();
+    	BigInteger zero = BigInteger.valueOf(0);
+    	BigInteger prodId;
+    	for	(int i = 0; i < availability.size(); i++){
+    		// If same storedId and quantity > 0
+    		if(availability.get(i).getStoreId().compareTo(storeId) == 0 && 
+    				availability.get(i).getQuantity().compareTo(zero) > 0){
+    			prodId = availability.get(i).getProductId();
+    			products.add(getProdById(prodId));
+    		}
+    	}
+    	return products;
     }
 
 }
