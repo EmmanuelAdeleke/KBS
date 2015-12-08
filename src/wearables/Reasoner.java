@@ -38,9 +38,8 @@ public class Reasoner {
 	public static void main(String args[]) throws FileNotFoundException {
 		Reasoner reasoner = new Reasoner("Wearables");
 		reasoner.init();
-		String keyword = "Pebble Watch";
-		System.out.println("Printing matches for: " + keyword);
-		printList(myDatabase.getProductsByKeyword(keyword));
+		test();
+		
 	}
 	
 	public static void test() {
@@ -71,6 +70,19 @@ public class Reasoner {
 		for(int i = 0; i < avProd.size(); i++) {
 			System.out.println(avProd.get(i));
 		}
+		
+		String keyword = "Pebble Watch";
+		System.out.println("\nGetting product matches for " + keyword);
+		printList(myDatabase.getProductsByKeyword(keyword));
+		
+		
+		keyword = "London";
+		System.out.println("\nGetting store matches for " + keyword);
+		printList(myDatabase.getStoresByKeyword(keyword));
+		
+		keyword = "Surrey";
+		System.out.println("\nGetting store matches for " + keyword);
+		printList(myDatabase.getStoresByKeyword(keyword));
 	}
 	
 	@SuppressWarnings("rawtypes")

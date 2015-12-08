@@ -57,6 +57,8 @@ public class Database {
     protected List<Store> store;
     @XmlElement(name = "Availability", required = true)
     protected List<Availability> availability;
+    
+    //====================== Get entire lists ==========================//
 
     // Return all Product objects in the database
     public List<Product> getProducts() {
@@ -90,6 +92,8 @@ public class Database {
     	return cat;
     }
     
+  //====================== Get content from an ID ==========================//
+    
     public Product getProdById(BigInteger id) {
     	Product prodFound = null;
     	for	(int i = 0; i < product.size(); i++){
@@ -101,6 +105,27 @@ public class Database {
     	return prodFound;
     }
     
+    public Store getStoreById(BigInteger id) {
+    	Store storeFound = null;
+    	for	(int i = 0; i < store.size(); i++){
+    		if(store.get(i).getId().compareTo(id) == 0){
+    			storeFound = store.get(i);
+    			break;
+    		}
+    	}
+    	return storeFound;
+    }
+    
+  //====================== Get content from keywords ==========================//
+    //helper function
+    boolean twoWayContain(String s1, String s2) {
+    	boolean val = false;
+    	if (s1.contains(s2) || s2.contains(s1)) val = true;
+    	return val;
+    }
+    
+    // ------ Products by keyword----------
+    
     // Returns how much a product matches a keyword. From 0 to 14.
     public int prodKeywordMatch(Product prod, String keyword) {
     	keyword = keyword.toLowerCase();
@@ -109,18 +134,16 @@ public class Database {
     	// Check if category matches
     	if (keyword.contains(category)) match += 1;
     	// Check if keyword mentions the brand or vice versa
-    	if (prod.getBrand().toLowerCase().contains(keyword) 
-    			|| keyword.contains(prod.getBrand().toLowerCase())) match += 5;
+    	if (twoWayContain(keyword, prod.getBrand().toLowerCase())) match += 5;
     	// Check if keyword mentions the name and vice versa.
-    	if (prod.getName().toLowerCase().contains(keyword) 
-    			|| keyword.contains(prod.getName().toLowerCase())) match += 5;
+    	if (twoWayContain(keyword,prod.getName().toLowerCase())) match += 5;
     	// Check if the name was mentioned
     	if (prod.getDescription().toLowerCase().contains(keyword)) match += 3;
     	return match;
     }
     
     // Returns a list where the first items match the keyword the best.
-	public List<Product> getProductsByKeyword(String keyword) {
+    public List<Product> getProductsByKeyword(String keyword) {
     	List<Product> prods = new ArrayList<Product>();
     	Product prod;
     	int matchNo;
@@ -151,15 +174,52 @@ public class Database {
     	return prods;
     }
     
-    public Store getStoreById(BigInteger id) {
-    	Store storeFound = null;
+    // ------ Stores by keyword----------
+    
+    // Returns how much a store matches a keyword. From 0 to 14.
+    public int storeKeywordMatch(Store store, String keyword) {
+    	keyword = keyword.toLowerCase();
+    	int match = 0;
+    	// Check Matches
+    	if (twoWayContain(keyword, store.getName().toLowerCase())) match += 5;
+    	if (twoWayContain(keyword, store.getAddress().toLowerCase())) match += 3;	
+    	if (twoWayContain(keyword, store.getPostcode().toLowerCase())) match += 10;
+    	if (twoWayContain(keyword, store.getCity().toLowerCase())) match += 5;
+    	if (twoWayContain(keyword, store.getRegion().toLowerCase())) match += 3;
+    	if (twoWayContain(keyword, store.getOpeningTimes().toLowerCase())) match += 10;
+    	return match;
+    }
+    
+    // Returns a list where the first items match the keyword the best.
+    public List<Store> getStoresByKeyword(String keyword) {
+    	List<Store> stores = new ArrayList<Store>();
+    	Store astore;
+    	int matchNo;
+    	// This will hold a reference to each product and how much it matches the keyword
+    	final HashMap<BigInteger, Integer> hm = new HashMap<BigInteger, Integer>();
+    	
+    	// Get all products that match the keyword in some way
     	for	(int i = 0; i < store.size(); i++){
-    		if(store.get(i).getId().compareTo(id) == 0){
-    			storeFound = store.get(i);
-    			break;
+    		astore = store.get(i);
+    		matchNo = storeKeywordMatch(astore, keyword);
+    		if(matchNo > 0){
+    			hm.put(astore.getId(), matchNo);
+    			stores.add(store.get(i));
     		}
     	}
-    	return storeFound;
+    	
+    	//Sort the list by match number using the hash map hm.
+    	Collections.sort(stores, new Comparator<Object>() {
+			@Override
+			public int compare(final Object store1, final Object store2) {
+				final int match1 = (int) hm.get(((Store) store1).getId());
+				final int match2 = (int) hm.get(((Store) store2).getId());
+				return (match1 < match2) ? 1 : -1;
+			}
+    	});
+    	
+    	//Return sorted list
+    	return stores;
     }
     
     public BigInteger getProdStockInStore(BigInteger prodId, BigInteger storeId) {
