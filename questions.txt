@@ -10,3 +10,12 @@ describe this product
 where is the store
 where can I find
 what's the closest store to
+what are the opening times
+what's the postcode of 
+when is this store open
+Are there any stores in
+Are there any "product" in "store"
+Do you have any "description"
+search
+find
+show all "category"

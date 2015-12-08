@@ -10,6 +10,9 @@ package wearables;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -80,10 +83,10 @@ public class Database {
     
     public List<String> getProdCategories() {
     	List<String> cat = new ArrayList<String>();
-    	cat.add("SmartWatch");
-    	cat.add("SmartGlasses");
-    	cat.add("SmartHeadphones");
-    	cat.add("SmartJackets");
+    	cat.add("Watch");
+    	cat.add("Glass");
+    	cat.add("Headphone");
+    	cat.add("Jacket");
     	return cat;
     }
     
@@ -98,19 +101,46 @@ public class Database {
     	return prodFound;
     }
     
-    public boolean prodHasKeyword(Product prod) {
-    	boolean has = false;
-    	
-    	return has;
+    // Returns how much a product matches a keyword. From 0 to 14.
+    public int prodKeywordMatch(Product prod, String keyword) {
+    	keyword = keyword.toLowerCase();
+    	int match = 0;
+    	String category = prod.getCategory().substring(5).toLowerCase(); //Category without the "Smart"
+    	// Check if category matches
+    	if (keyword.contains(category)) match += 1;
+    	// Check if keyword mentions the brand or vice versa
+    	if (prod.getBrand().toLowerCase().contains(keyword) 
+    			|| keyword.contains(prod.getBrand().toLowerCase())) match += 5;
+    	// Check if keyword mentions the name and vice versa.
+    	if (prod.getName().toLowerCase().contains(keyword) 
+    			|| keyword.contains(prod.getName().toLowerCase())) match += 5;
+    	// Check if the name was mentioned
+    	if (prod.getDescription().toLowerCase().contains(keyword)) match += 3;
+    	return match;
     }
     
-    public List<Product> getProductsByKeyword(String keyword) {
+    // Returns a list where the first items match the keyword the best.
+	public List<Product> getProductsByKeyword(String keyword) {
     	List<Product> prods = new ArrayList<Product>();
+    	Product prod;
+    	int matchNo;
+    	final HashMap<BigInteger, Integer> hm = new HashMap<BigInteger, Integer>();
     	for	(int i = 0; i < product.size(); i++){
-    		if(prodHasKeyword(product.get(i))){
+    		prod = product.get(i);
+    		matchNo = prodKeywordMatch(prod, keyword);
+    		if(matchNo > 0){
+    			hm.put(prod.getId(), matchNo);
     			prods.add(product.get(i));
     		}
     	}
+    	Collections.sort(prods, new Comparator<Object>() {
+			@Override
+			public int compare(final Object prod1, final Object prod2) {
+				final int match1 = (int) hm.get(((Product) prod1).getId());
+				final int match2 = (int) hm.get(((Product) prod2).getId());
+				return (match1 < match2) ? 1 : -1;
+			}
+    	});
     	return prods;
     }
     
