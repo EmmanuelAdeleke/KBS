@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  * 
+ * This database holds all elements stored in the Wearables.xml
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)

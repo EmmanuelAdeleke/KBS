@@ -8,9 +8,9 @@ import java.util.List;
 
 public class Reasoner {
 
-	public List itemList;
-	public List storeList;
-	public List availabilityList;
+	public List<Product> itemList;
+	public List<Store> storeList;
+	public List<Availability> availabilityList;
 	public Database myDatabase;
 	public File xmlFile;
 	

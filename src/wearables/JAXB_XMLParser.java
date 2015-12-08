@@ -18,7 +18,6 @@ public class JAXB_XMLParser {
 			unmarshaller = jaxbContext.createUnmarshaller();
 		}
 		catch (JAXBException e) {
-			
 			System.out.println("problem jaxb");
 		}
 	}
@@ -27,14 +26,13 @@ public class JAXB_XMLParser {
 	public Database loadXML(InputStream fileinputstream) {
 		try {
 			
-			System.out.println("Started. loading XML");
+			System.out.println("Begin to load XML");
 			
 			Object xmltoobject = unmarshaller.unmarshal(fileinputstream);
 
 			if (myDatabase == null) {
 
-				System.out.println("if reached");
-				myDatabase = (Database) (((JAXBElement) xmltoobject).getValue());
+				myDatabase = (Database) (((JAXBElement<?>) xmltoobject).getValue());
 				
 				return myDatabase;
 			}
