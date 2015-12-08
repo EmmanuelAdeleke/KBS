@@ -78,6 +78,15 @@ public class Database {
         return this.availability;
     }
     
+    public List<String> getProdCategories() {
+    	List<String> cat = new ArrayList<String>();
+    	cat.add("SmartWatch");
+    	cat.add("SmartGlasses");
+    	cat.add("SmartHeadphones");
+    	cat.add("SmartJackets");
+    	return cat;
+    }
+    
     public Product getProdById(BigInteger id) {
     	Product prodFound = null;
     	for	(int i = 0; i < product.size(); i++){
@@ -87,6 +96,22 @@ public class Database {
     		}
     	}
     	return prodFound;
+    }
+    
+    public boolean prodHasKeyword(Product prod) {
+    	boolean has = false;
+    	
+    	return has;
+    }
+    
+    public List<Product> getProductsByKeyword(String keyword) {
+    	List<Product> prods = new ArrayList<Product>();
+    	for	(int i = 0; i < product.size(); i++){
+    		if(prodHasKeyword(product.get(i))){
+    			prods.add(product.get(i));
+    		}
+    	}
+    	return prods;
     }
     
     public Store getStoreById(BigInteger id) {
@@ -142,5 +167,5 @@ public class Database {
     	}
     	return products;
     }
-
+    
 }

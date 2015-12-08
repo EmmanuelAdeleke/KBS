@@ -39,18 +39,10 @@ public class Reasoner {
 		Reasoner reasoner = new Reasoner("Wearables");
 		reasoner.init();
 		
-//		for(int i = 0; i < reasoner.prodList.size(); i++) {
-//			System.out.println(reasoner.prodList.get(i));
-//		}
-//		
-//		for(int i = 0; i < reasoner.storeList.size(); i++) {
-//			System.out.println(reasoner.storeList.get(i));
-//		}
-//		
-//		for(int i = 0; i < reasoner.availabilityList.size(); i++) {
-//			System.out.println(reasoner.availabilityList.get(i));
-//		}
 		
+	}
+	
+	public static void test() {
 		BigInteger prodId = prodList.get(0).getId();
 		System.out.println("Product with id: " + prodId);
 		System.out.println(myDatabase.getProdById(prodId));
@@ -78,8 +70,6 @@ public class Reasoner {
 		for(int i = 0; i < avProd.size(); i++) {
 			System.out.println(avProd.get(i));
 		}
-		
-		
 	}
 	
 }
