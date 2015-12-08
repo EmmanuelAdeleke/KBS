@@ -51,74 +51,26 @@ public class Availability {
     @XmlElement(required = true)
     protected BigInteger quantity;
 
-    /**
-     * Gets the value of the productId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
     public BigInteger getProductId() {
         return productId;
     }
 
-    /**
-     * Sets the value of the productId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
     public void setProductId(BigInteger value) {
         this.productId = value;
     }
-
-    /**
-     * Gets the value of the storeId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
+ 
     public BigInteger getStoreId() {
         return storeId;
     }
 
-    /**
-     * Sets the value of the storeId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
     public void setStoreId(BigInteger value) {
         this.storeId = value;
     }
 
-    /**
-     * Gets the value of the quantity property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
     public BigInteger getQuantity() {
         return quantity;
     }
 
-    /**
-     * Sets the value of the quantity property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
     public void setQuantity(BigInteger value) {
         this.quantity = value;
     }

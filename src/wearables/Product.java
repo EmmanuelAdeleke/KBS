@@ -57,6 +57,7 @@ import javax.xml.bind.annotation.XmlType;
     "colour",
     "description"
 })
+
 public class Product {
 
     @XmlElement(required = true)
@@ -72,146 +73,54 @@ public class Product {
     @XmlElement(required = true)
     protected String description;
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
+
     public BigInteger getId() {
         return id;
     }
 
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
     public void setId(BigInteger value) {
         this.id = value;
     }
 
-    /**
-     * Gets the value of the category property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getCategory() {
         return category;
     }
 
-    /**
-     * Sets the value of the category property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+
     public void setCategory(String value) {
         this.category = value;
     }
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
+
     public String getName() {
         return name;
     }
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+ 
     public void setName(String value) {
         this.name = value;
     }
 
-    /**
-     * Gets the value of the brand property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getBrand() {
         return brand;
     }
 
-    /**
-     * Sets the value of the brand property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setBrand(String value) {
         this.brand = value;
     }
 
-    /**
-     * Gets the value of the colour property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getColour() {
         return colour;
     }
 
-    /**
-     * Sets the value of the colour property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setColour(String value) {
         this.colour = value;
     }
 
-    /**
-     * Gets the value of the description property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Sets the value of the description property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setDescription(String value) {
         this.description = value;
     }

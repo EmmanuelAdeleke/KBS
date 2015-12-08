@@ -52,28 +52,7 @@ public class Database {
     @XmlElement(name = "Availability", required = true)
     protected List<Availability> availability;
 
-    /**
-     * Gets the value of the product property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the product property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getProduct().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Product }
-     * 
-     * 
-     */
+    
     public List<Product> getProduct() {
         if (product == null) {
             product = new ArrayList<Product>();
@@ -81,28 +60,7 @@ public class Database {
         return this.product;
     }
 
-    /**
-     * Gets the value of the store property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the store property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getStore().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Store }
-     * 
-     * 
-     */
+
     public List<Store> getStore() {
         if (store == null) {
             store = new ArrayList<Store>();
@@ -110,28 +68,6 @@ public class Database {
         return this.store;
     }
 
-    /**
-     * Gets the value of the availability property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the availability property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getAvailability().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Availability }
-     * 
-     * 
-     */
     public List<Availability> getAvailability() {
         if (availability == null) {
             availability = new ArrayList<Availability>();

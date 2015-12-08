@@ -80,242 +80,82 @@ public class Store {
     @XmlElement(required = true)
     protected BigInteger id;
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getName() {
         return name;
     }
-
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+    
     public void setName(String value) {
         this.name = value;
     }
 
-    /**
-     * Gets the value of the address property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getAddress() {
         return address;
     }
 
-    /**
-     * Sets the value of the address property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setAddress(String value) {
         this.address = value;
     }
 
-    /**
-     * Gets the value of the postcode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getPostcode() {
         return postcode;
     }
 
-    /**
-     * Sets the value of the postcode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setPostcode(String value) {
         this.postcode = value;
     }
 
-    /**
-     * Gets the value of the city property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getCity() {
         return city;
     }
 
-    /**
-     * Sets the value of the city property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setCity(String value) {
         this.city = value;
     }
-
-    /**
-     * Gets the value of the region property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
+ 
     public String getRegion() {
         return region;
     }
-
-    /**
-     * Sets the value of the region property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
+ 
     public void setRegion(String value) {
         this.region = value;
     }
 
-    /**
-     * Gets the value of the phoneNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    /**
-     * Sets the value of the phoneNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setPhoneNumber(String value) {
         this.phoneNumber = value;
     }
 
-    /**
-     * Gets the value of the openingTimes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getOpeningTimes() {
         return openingTimes;
     }
 
-    /**
-     * Sets the value of the openingTimes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
     public void setOpeningTimes(String value) {
         this.openingTimes = value;
     }
 
-    /**
-     * Gets the value of the lat property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
     public BigDecimal getLat() {
         return lat;
     }
 
-    /**
-     * Sets the value of the lat property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
     public void setLat(BigDecimal value) {
         this.lat = value;
     }
 
-    /**
-     * Gets the value of the long property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
     public BigDecimal getLong() {
         return _long;
     }
 
-    /**
-     * Sets the value of the long property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
     public void setLong(BigDecimal value) {
         this._long = value;
     }
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
     public BigInteger getId() {
         return id;
     }
-
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
+    
     public void setId(BigInteger value) {
         this.id = value;
     }
