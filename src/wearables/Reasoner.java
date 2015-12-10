@@ -62,14 +62,15 @@ public class Reasoner {
 	public static void main(String args[]) throws FileNotFoundException {
 		Reasoner reasoner = new Reasoner("Wearables");
 		reasoner.init();
-		reader = new Scanner(System.in);
-		
-		String input = "";
-		while (input != "q") {
-			System.out.println("Enter a number: ");
-			input = reader.nextLine();	
-			printList(myDatabase.getProductsByKeyword(input));
-		}
+//		reader = new Scanner(System.in);
+//		
+//		String input = "";
+//		while (input != "q") {
+//			System.out.println("Enter a number: ");
+//			input = reader.nextLine();	
+//			printList(myDatabase.getProductsByKeyword(input));
+//		}
+		test();
 		
 	}
 	
