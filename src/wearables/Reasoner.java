@@ -21,14 +21,15 @@ public class Reasoner {
 	public Vector<String> productSyn = new Vector<String>(); 
 	public Vector<String> storeSyn = new Vector<String>(); 
 	
-	public String questiontype = "";         // questiontype selects method to use in a query
+	public String questiontype = "";         // question type selects method to use in a query
 	@SuppressWarnings("rawtypes")
-	public List classtype = new ArrayList(); // classtype selects which class list to query
-	public String attributetype = "";        // attributetype selects the attribute to check for in the query
+	public List classtype = new ArrayList(); // class type selects which class list to query
+	public String attributetype = "";        // attribute type selects the attribute to check for in the query
 
 	public Object CurrentSubject; 			 // Last Object dealt with
 	public Integer CurrentSubjectIndex;      // Last Index used
 	
+	public String[][] questionMapping = new String [20][2]; //Holds words and their matching question type.
 	
 	public Reasoner(String fileName) {
 		xmlFile = new File(fileName + ".xml");
@@ -54,9 +55,68 @@ public class Reasoner {
 		productSyn.add(" item");
 		productSyn.add(" product");
 		productSyn.add(" unit");
-		productSyn.add(" stock");
+		productSyn.add(" stock");	
 		
+		int x = 0;
+		questionMapping[x][0] = "where";
+		questionMapping[x][1] = "where";
 		
+		questionMapping[++x][0] = "closest";
+		questionMapping[x][1] = "where";
+		
+		questionMapping[++x][0] = "which way";
+		questionMapping[x][1] = "where";
+		
+		questionMapping[++x][0] = "postcode";
+		questionMapping[x][1] = "where";
+		
+		questionMapping[++x][0] = "how many";
+		questionMapping[x][1] = "howmany";
+		
+		questionMapping[++x][0] = "number of";
+		questionMapping[x][1] = "howmany";
+		
+		questionMapping[++x][0] = "amount of";
+		questionMapping[x][1] = "howmany";
+		
+		questionMapping[++x][0] = "count ";
+		questionMapping[x][1] = "howmany";
+		
+		questionMapping[++x][0] = "total ";
+		questionMapping[x][1] = "howmany";
+	
+		questionMapping[++x][0] = "there any ";
+		questionMapping[x][1] = "howmany";
+	
+		questionMapping[++x][0] = "have any ";
+		questionMapping[x][1] = "howmany";
+		
+		questionMapping[++x][0] = "how much";
+		questionMapping[x][1] = "howmuch";
+		
+		questionMapping[++x][0] = "s the cost";
+		questionMapping[x][1] = "howmuch";
+		
+		questionMapping[++x][0] = "price";
+		questionMapping[x][1] = "howmuch";
+		
+		questionMapping[++x][0] = "show ";
+		questionMapping[x][1] = "show";
+		
+		questionMapping[++x][0] = "do you have";
+		questionMapping[x][1] = "show";
+		
+		questionMapping[++x][0] = "describe";
+		questionMapping[x][1] = "show";
+		
+		questionMapping[++x][0] = "what are";
+		questionMapping[x][1] = "show";
+		
+		questionMapping[++x][0] = "what is";
+		questionMapping[x][1] = "show";
+		
+		questionMapping[++x][0] = "store open";
+		questionMapping[x][1] = "show";	
 	}
 	
 	public static void main(String args[]) throws FileNotFoundException {
@@ -68,9 +128,26 @@ public class Reasoner {
 		while (input != "q") {
 			System.out.println("Enter a number: ");
 			input = reader.nextLine();	
-			printList(myDatabase.getProductsByKeyword(input));
+			System.out.println(reasoner.generateAnswer(input));
 		}
 		
+	}
+	
+	public String generateAnswer(String question) {
+		Vector<String> out = new Vector<String>();
+		String answer = "";  
+		
+		question = question.toLowerCase(); // all in lower case because thats easier to analyse
+		
+		for (int i = 0; i < questionMapping.length; i++) {
+			
+			if (question.contains(questionMapping[i][0])){
+				questiontype = questionMapping[i][1]; 
+				question = question.replace("count", "<b>" + questionMapping[i][0] + "</b>");
+			}
+		}
+		
+		return question;
 	}
 	
 	public static void test() {
