@@ -122,6 +122,7 @@ public class Reasoner {
 	public static void main(String args[]) throws FileNotFoundException {
 		Reasoner reasoner = new Reasoner("Wearables");
 		reasoner.init();
+
 		reader = new Scanner(System.in);
 		
 		String input = "";
