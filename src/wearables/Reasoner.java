@@ -159,78 +159,27 @@ public class Reasoner {
 	}
 	
 	public String generateAnswer(String question) {
-		Vector<String> out = new Vector<String>();
-		String questiontype = "";  // question type selects method to use in a query
-		String answer = "";  
-		String keyword;
-		String type;
+		
+		String questionType = "";  					// question type selects method to use in a query
+		String trimmedQuestion; 					// Question without class synonyms found.
+		List<Product> productsFound; 				// Products possibly mentioned in the question
+		List<Store> storesFound; 					// Stores possibly mentioned in the question
+		HashMap<String, Integer> detectedClasses; 	//Classes detected and their match score
+		
+		
 		question = question.toLowerCase(); // all in lower case because thats easier to analyse
 		
-		// =========== Checking the question type ================
-		
-		//Check against all keywords to determine the question type.
-		for (int i = 0; i < questionMapping.length; i++) {	
-			keyword = questionMapping[i][0];
-			type = questionMapping[i][1];
-			if (question.contains(keyword)){
-				questiontype = type; 
-				question = question.replace(keyword, "<b>" + keyword + "</b>");
-			}
-		}
+		// =================== Check the question type ==================
+		questionType = getQuestionType(question);
 		
 		// ============ Check the Subject of the Question ===============
-		Vector<String> synList;
-		String synonym;
-		String trimmedQuestion = question; // Question without class synonyms found.
-		int score; // hold scores temporarily
+		AnalysisResult questionAnalysis  = analyseQuestion(question);
 		
-		// This hash map will hold detected class name and their match score.
-		HashMap<String, Integer> detectedClasses = new HashMap<String, Integer>();
+		productsFound = questionAnalysis.productsFound;
+		storesFound = questionAnalysis.storesFound;
+		detectedClasses = questionAnalysis.detectedClasses;
+		trimmedQuestion = questionAnalysis.trimmedQuestion;
 		
-		// List of synonyms lists
-		HashMap<String, Vector<String>> subjectsSyn = new HashMap<String, Vector<String>>();
-		subjectsSyn.put("Product", productSyn);
-		subjectsSyn.put("Store", storeSyn);
-		subjectsSyn.put("LastSubject", lastSubjectSyn);
-		
-		// List to hold results found
-		List<Product> productsFound;
-		List<Store> storesFound;
-		
-		
-		// Check for class synonyms
-		for (String className : subjectsSyn.keySet()) {
-			
-			synList = subjectsSyn.get(className);
-			for (int x = 0; x < synList.size(); x++) { 
-
-				synonym = synList.get(x);
-				if (question.contains(synonym)) {
-
-					//Add score to hashMap
-					score = detectedClasses.getOrDefault(className, 0);
-					detectedClasses.put(className, score + 2); 
-
-					question = question.replace(synonym, "<b>"+synonym+"</b>");
-					System.out.println("Class type " + className + " recognised.");
-
-					trimmedQuestion = trimmedQuestion.replace(synonym, " ");
-				}
-			}
-
-		}
-		
-		trimmedQuestion.trim(); // Replacing synonyms with white spaces may have left too many spaces.
-		
-		// Maybe the question is asking for a specific item, so let's search using everything in
-		// the question that is not a found synonym as a keyword.
-		productsFound = myDatabase.getProductsByKeyword(trimmedQuestion);
-		score = detectedClasses.getOrDefault("Product", 0);
-		detectedClasses.put("Product", score + 5); 
-		
-		storesFound = myDatabase.getStoresByKeyword(trimmedQuestion);
-		score = detectedClasses.getOrDefault("Store", 0);
-		detectedClasses.put("Store", score + 5); 
 		
 		printList(productsFound);
 		printList(storesFound);
@@ -295,7 +244,90 @@ public class Reasoner {
 		printList(myDatabase.getStoresByKeyword(keyword));
 	}
 	
-	//================== Helper functions ======================
+	//=============================================================================================
+	//============================ Question analysis functions ====================================
+	//=============================================================================================
+	
+	public String getQuestionType(String question) {
+		String keyword, type, questionType = "";
+		
+		//Check against all keywords to determine the question type.
+		for (int i = 0; i < questionMapping.length; i++) {	
+			keyword = questionMapping[i][0];
+			type = questionMapping[i][1];
+			if (question.contains(keyword)){
+				questionType = type; 
+				question = question.replace(keyword, "<b>" + keyword + "</b>");
+			}
+		}
+		return questionType;
+	}
+	
+	
+	public AnalysisResult analyseQuestion(String question) {
+		Vector<String> synList;
+		String synonym;
+		String trimmedQuestion = question; // Question without class synonyms found.
+		int score; // hold scores temporarily
+		
+		// This hash map will hold detected class name and their match score.
+		HashMap<String, Integer> detectedClasses = new HashMap<String, Integer>();
+		
+		// List of synonyms lists
+		HashMap<String, Vector<String>> subjectsSyn = new HashMap<String, Vector<String>>();
+		subjectsSyn.put("Product", productSyn);
+		subjectsSyn.put("Store", storeSyn);
+		subjectsSyn.put("LastSubject", lastSubjectSyn);
+		
+		// List to hold results found
+		List<Product> productsFound;
+		List<Store> storesFound;
+		
+		
+		// Check for class synonyms
+		for (String className : subjectsSyn.keySet()) {
+			
+			synList = subjectsSyn.get(className);
+			for (int x = 0; x < synList.size(); x++) { 
+
+				synonym = synList.get(x);
+				if (question.contains(synonym)) {
+
+					//Add score to hashMap
+					score = detectedClasses.getOrDefault(className, 0);
+					detectedClasses.put(className, score + 2); 
+
+					question = question.replace(synonym, "<b>"+synonym+"</b>");
+					System.out.println("Class type " + className + " recognised.");
+
+					trimmedQuestion = trimmedQuestion.replace(synonym, " ");
+				}
+			}
+
+		}
+		
+		trimmedQuestion.trim(); // Replacing synonyms with white spaces may have left too many spaces.
+		
+		// Maybe the question is asking for a specific item, so let's search using everything in
+		// the question that is not a found synonym as a keyword.
+		productsFound = myDatabase.getProductsByKeyword(trimmedQuestion);
+		score = detectedClasses.getOrDefault("Product", 0);
+		detectedClasses.put("Product", score + 5); 
+		
+		storesFound = myDatabase.getStoresByKeyword(trimmedQuestion);
+		score = detectedClasses.getOrDefault("Store", 0);
+		detectedClasses.put("Store", score + 5); 
+		
+		
+		// Wrapper object for the result
+		AnalysisResult result = new AnalysisResult(productsFound, storesFound, detectedClasses, trimmedQuestion);
+		return result;
+	}
+	
+	//=============================================================================================
+	//================================ Helper functions ===========================================
+	//=============================================================================================
+	
 	@SuppressWarnings("rawtypes")
 	public static void printList(List alist) {
 		for (int i = 0; i< alist.size(); i++) {
@@ -315,6 +347,27 @@ public class Reasoner {
 			listString += alist.get(i) + "\n";
 		}
 		return listString;
+	}
+	
+	
+	//=============================================================================================
+	//=================================== Helper classes ==========================================
+	//=============================================================================================
+	
+	public static class AnalysisResult {
+		public List<Product> productsFound;
+		public List<Store> storesFound;
+		public HashMap<String, Integer> detectedClasses;
+		public String trimmedQuestion;
+		
+		//Contructor setting everything.
+		protected AnalysisResult(List<Product> productsFound, List<Store> storesFound, 
+				HashMap<String, Integer> detectedClasses, String trimmedQuestion) {
+			this.productsFound = productsFound;
+			this.storesFound = storesFound;
+			this.detectedClasses = detectedClasses;
+			this.trimmedQuestion = trimmedQuestion;
+		}		
 	}
 	
 }
