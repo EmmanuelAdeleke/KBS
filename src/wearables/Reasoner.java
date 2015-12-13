@@ -260,6 +260,7 @@ public class Reasoner {
 		List<Product> productsFound;
 		List<Store> storesFound;
 		List<String> prodClassesFound;
+		List<String> storeAreasFound;
 		
 		
 		// Check for class synonyms
@@ -292,13 +293,18 @@ public class Reasoner {
 		score = productsFound.size()*2;
 		if (productsFound.size() > 0 ) detectedClasses.put("SpecificProduct", score); 
 		
-		storesFound = myDatabase.getStoresByKeyword(trimmedQuestion);
-		score = storesFound.size()*2;
-		if (storesFound.size() > 0 )  detectedClasses.put("Store", score); 
-		
 		prodClassesFound = myDatabase.getProdClassesByKeyword(trimmedQuestion);
 		score = prodClassesFound.size() * 5;
 		if (prodClassesFound.size() > 0 )  detectedClasses.put("ProductClass", score);
+		
+		storesFound = myDatabase.getStoresByKeyword(trimmedQuestion);
+		score = storesFound.size()*2;
+		if (storesFound.size() > 0 )  detectedClasses.put("SpecificStore", score); 
+		
+		storeAreasFound = myDatabase.getStoreAreasByKeyword(trimmedQuestion);
+		score = storeAreasFound.size()*2;
+		if (storeAreasFound.size() > 0 )  detectedClasses.put("StoreArea", score);
+		
 		
 		// Wrapper object for the result
 		AnalysisResult result = new AnalysisResult(productsFound, storesFound, detectedClasses, trimmedQuestion);

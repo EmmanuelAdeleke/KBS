@@ -187,7 +187,7 @@ public class Database {
     
     // ------ Store Area by keyword----------
     @SuppressWarnings("unchecked")
-	public List<String> getStoreAreaByKeyword(String keyword) {
+	public List<String> getStoreAreasByKeyword(String keyword) {
     	
     	//Use a LinkedHashSet to prevent duplicates;
     	LinkedHashSet<String> foundAreas = new LinkedHashSet<String>();
@@ -202,7 +202,6 @@ public class Database {
     			foundAreas.add(astore.getCity());
     		}
     	}
-    	
     	
     	return (List<String>) foundAreas;
     }
