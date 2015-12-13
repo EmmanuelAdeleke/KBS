@@ -16,20 +16,28 @@ public class Reasoner {
 	public static File xmlFile;
 	private static Scanner reader;
 	
-	//Terms to refer to the last subject referred to
+	// Lists of synonyms
 	public Vector<String> lastSubjectSyn = new Vector<String>(); 
-	// Synonyms to store and product
 	public Vector<String> productSyn = new Vector<String>(); 
 	public Vector<String> storeSyn = new Vector<String>(); 
 	
-	@SuppressWarnings("rawtypes")
-	public List classtype = new ArrayList(); // class type selects which class list to query
-	public String attributetype = "";        // attribute type selects the attribute to check for in the query
-
-	public Object CurrentSubject; 			 // Last Object dealt with
-	public Integer CurrentSubjectIndex;      // Last Index used
+	//A list to hold words and their matching question type.
+	public String[][] questionMapping = new String [25][2]; 
 	
-	public String[][] questionMapping = new String [25][2]; //Holds words and their matching question type.
+	public static void main(String args[]) throws FileNotFoundException {
+		Reasoner reasoner = new Reasoner("Wearables");
+		reasoner.init();
+
+		reader = new Scanner(System.in);
+		
+		String input = "";
+		while (input != "q") {
+			System.out.println("Enter a question: ");
+			input = reader.nextLine();	
+			System.out.println(reasoner.generateAnswer(input));
+		}
+		
+	}
 	
 	public Reasoner(String fileName) {
 		xmlFile = new File(fileName + ".xml");
@@ -143,92 +151,134 @@ public class Reasoner {
 		questionMapping[x][1] = "farewell";
 	}
 	
-	public static void main(String args[]) throws FileNotFoundException {
-		Reasoner reasoner = new Reasoner("Wearables");
-		reasoner.init();
 
-		reader = new Scanner(System.in);
-		
-		String input = "";
-		while (input != "q") {
-			System.out.println("Enter a question: ");
-			input = reader.nextLine();	
-			System.out.println(reasoner.generateAnswer(input));
-		}
-		
-	}
+	
 	
 	public String generateAnswer(String question) {
 		String answer = "";
 		String questionType = "";  					// question type selects method to use in a query
-		String trimmedQuestion; 					// Question without class synonyms found.
-		HashMap<String, Integer> detectedClasses; 	//Classes detected and their match score
-		
 		
 		question = question.toLowerCase(); // all in lower case because thats easier to analyse
 		
-		// ================= Check question type ==================
+		// Check question type 
 		questionType = getQuestionType(question);
 		
-		// =============== Check question subject =================
+		// Check question subject
 		AnalysisResult qAn  = analyseQuestion(question);
 		
-		trimmedQuestion = qAn.trimmedQuestion;
-		detectedClasses = qAn.detectedClasses;
-		System.out.println(detectedClasses.toString());		
+		// Answer accordingly
+		switch (questionType) {
+	        case "howmany":
+	        	answer = answerHowMany(qAn);
+	            break;
+	        default: 
+	        	answer = answerUnknownCase(qAn);
+	            break;
+	    }
 		
-		// =================== Generate an answer ========================//
-		if (questionType == "howMany") {
-			//of specific product in specific store, store overall, of a specific product, stores in, stores open after,
-			int prodScore = detectedClasses.getOrDefault("Product", 0);
-			int storeScore = detectedClasses.getOrDefault("Store", 0);
-			int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
-			int sStoreScore = detectedClasses.getOrDefault("SpecificStore", 0);
-			int storeAreaScore = detectedClasses.getOrDefault("StoreArea", 0);
-			int amount = 0;
-			String subj1 = "";
-			String subj2 = "";
-			
-			// # of such product...
-			if (sProdScore > 0) {
-				Product prod = qAn.productsFound.get(0);
-				subj1 = prod.getName();
-				
-				// in such store
-				if (sStoreScore >0) {
-					amount = myDatabase.getProdStockInStore(prod.getId(), qAn.storesFound.get(0).getId());
-					subj2 = qAn.storesFound.get(0).getName();
-					answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
-				} 
-				// in such areas (Could be more than one)
-				else if (storeAreaScore > 0) {
-					amount = 0;
-									
-				}
-				// overall
-				else if (sProdScore > 0) {
-					answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
-				}
-			}
-				
-		}
-		// ================= Question type not identified =============== //
-		// Let's give a generic answer with matching items.
-		
-		if (questionType == "" && (productsFound.size() + storesFound.size()) > 0) {
-			answer = "Here are some results that may interest you: \n";
-			if (productsFound.size() > 0) {
-				answer += "\nProducts:\n" +	listToString(productsFound);
-			}
-			if (storesFound.size() > 0) {
-				answer += "\nStores:\n" + listToString(storesFound);
-				printList(storesFound);
-			}
-		}
 		return answer;
 	}
 	
+	//=============================================================================================
+	//============================ Functions to create Answers ====================================
+	//=============================================================================================
 	
+	public String answerHowMany(AnalysisResult qAn) {
+		String trimmedQuestion = qAn.trimmedQuestion; 					// Question without class synonyms found.
+		HashMap<String, Integer> detectedClasses = qAn.detectedClasses; //Classes detected and their match score
+
+		int prodScore = detectedClasses.getOrDefault("Product", 0);
+		int prodClassScore = detectedClasses.getOrDefault("ProductClass", 0);
+		int storeScore = detectedClasses.getOrDefault("Store", 0);
+		int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
+		int sStoreScore = detectedClasses.getOrDefault("SpecificStore", 0);
+		int storeAreaScore = detectedClasses.getOrDefault("StoreArea", 0);
+		int amount = 0;
+		String subj1 = "";
+		String subj2 = "";
+		String answer = "";
+		
+		// # of such product...
+		if (sProdScore > 0) {
+			Product prod = qAn.productsFound.get(0);
+			subj1 = prod.getName();
+			
+			// in such store
+			if (sStoreScore >0) {
+				amount = myDatabase.getProdStockInStore(prod.getId(), qAn.storesFound.get(0).getId());
+				subj2 = qAn.storesFound.get(0).getName();
+				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+			} 
+			// in such areas (Could be more than one)
+			else if (storeAreaScore > 0) {
+				amount = 0;
+				String cityListing = "";
+				String storeListing = "";
+				for (int i = 0; i < qAn.storeAreasFound.size(); i++) {
+					String cityName = qAn.storeAreasFound.get(i);
+					amount += myDatabase.getProdStockInCity(prod.getId(), cityName);
+					storeListing += "\n" + listToString(myDatabase.getStoresByCity(cityName));
+					
+					//If list has more than one item and it is the last item in the list
+					if (qAn.storeAreasFound.size() > 1 && qAn.storeAreasFound.size() - i == 1){
+						cityListing += " and";
+					}
+					cityListing += cityName;
+				}
+				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer += "\nYou can find it at these stores: " + storeListing;
+			} 
+			// (# of stores that have such product)
+			else if (storeScore > 0) {
+				List<Store> storeList = myDatabase.getStoresWithProd(prod.getId());
+				amount = storeList.size();
+				answer = "There are " + amount + " stores with " + prod.getName() + " in stock.\nThese are:\n" + listToString(storeList);
+			}
+			// overall
+			else if (sProdScore > 0) {
+				amount = myDatabase.getTotalProductStock(prod.getId());
+				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+			}
+		}
+		//# in a specific store store
+		else if (sStoreScore > 0) {
+			// # of a prod class in specific store
+			if (prodClassScore > 0) {
+				
+				
+			}
+			// # of products in general in specific store
+			else {
+				BigInteger storeId = qAn.storesFound.get(0).getId();
+				String storeName = qAn.storesFound.get(0).getName();
+				amount = myDatabase.getTotalStoreTock(storeId);
+				List<Product> prodList = myDatabase.getStoreProducts(storeId);
+				
+				answer = "There are " + amount + " products at the " + storeName + ", amongst which you can find:\n" + listToString(prodList);
+			}
+			
+		}
+		
+		return answer;
+	}
+	
+	public String answerUnknownCase(AnalysisResult qAn) {
+		String answer = "";
+		// Let's give a generic answer with matching items.			
+		if ((qAn.productsFound.size() + qAn.storesFound.size()) > 0) {
+			answer = "Here are some results that may interest you: \n";
+			if (qAn.productsFound.size() > 0) {
+				answer += "\nProducts:\n" +	listToString(qAn.productsFound);
+			}
+			if (qAn.storesFound.size() > 0) {
+				answer += "\nStores:\n" + listToString(qAn.storesFound);
+				printList(qAn.storesFound);
+			}
+		} else { //Nothing identified at all
+			answer = "Uh, I didn't quite catch that. Can you rephrase it, please.";
+		}
+		return answer;
+	}
 	//=============================================================================================
 	//============================ Question analysis functions ====================================
 	//=============================================================================================

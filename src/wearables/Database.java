@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -191,6 +192,7 @@ public class Database {
     	
     	//Use a LinkedHashSet to prevent duplicates;
     	LinkedHashSet<String> foundAreas = new LinkedHashSet<String>();
+    	List<String> foundAreasList = new ArrayList<String>();
     	boolean regionMatch, cityMatch;
     	Store astore;
     	
@@ -202,8 +204,13 @@ public class Database {
     			foundAreas.add(astore.getCity());
     		}
     	}
+
     	
-    	return (List<String>) foundAreas;
+    	// Transfer the LinkedHashSet to an ArrayList
+    	Iterator<String> itr = foundAreas.iterator();
+	    while(itr.hasNext()) foundAreasList.add(itr.next());
+	  
+    	return foundAreasList;
     }
     
     // ------ Stores by keyword----------
@@ -254,6 +261,16 @@ public class Database {
   //========================== END of content from Keyword ===============================//
     
     //============================== Getting numbers ===============================//
+    public int getTotalStoreTock(BigInteger storeId) {
+    	List<Product> prodList = getStoreProducts(storeId);
+    	int totalStock = 0;
+    	for (int i = 0; i < prodList.size(); i++) {
+    		totalStock += getProdStockInStore(prodList.get(i).getId(), storeId);
+    	}
+    	
+    	return totalStock;
+    }
+    
     public int getProdStockInStore(BigInteger prodId, BigInteger storeId) {
     	BigInteger stock = BigInteger.valueOf(0);
     	for	(int i = 0; i < availability.size(); i++){
@@ -274,6 +291,19 @@ public class Database {
 			stock += getProdStockInStore(prodId, storesInArea.get(i).getId());
 		}
 		return stock;
+    }
+    
+    public int getTotalProductStock(BigInteger prodId) {
+    	List<Availability> prodAvailabilityList = getAvailability();
+    	int totalStock = 0;
+    	
+    	for (int i = 0; i < prodAvailabilityList.size(); i++) {
+    		if (prodAvailabilityList.get(i).getProductId() == prodId) {
+    			totalStock += prodAvailabilityList.get(i).getQuantity().intValue();
+    		}
+    	}
+    	
+    	return totalStock;
     }
     
     //============================== Getting stores ===============================//
@@ -322,6 +352,21 @@ public class Database {
     	return products;
     }
     
+    public List<Product> getProdByCategory(String prodClass) {
+    	//Use a LinkedHashSet to prevent duplicates;
+    	List<Product> prodList = new ArrayList<Product>();
+    	boolean regionMatch, cityMatch;
+    	Product aprod;
+    	
+    	for	(int i = 0; i < product.size(); i++){
+    		aprod = product.get(i);
+    		if(aprod.getCategory() == prodClass){
+    			prodList.add(aprod);
+    		}
+    	}
+
+    	return prodList;
+    }
     
     
 }
