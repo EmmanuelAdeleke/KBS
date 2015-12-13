@@ -281,6 +281,19 @@ public class Database {
     	return stores;
     }
     
+    public List<Store> getStoresInCity(String cityName) {
+    	List<Store> storesFound = new ArrayList<Store>();
+    	Store astore;
+    	// Get all stores that match the keyword in some way
+    	for	(int i = 0; i < store.size(); i++){
+    		astore = store.get(i);
+    		if (astore.getCity() == cityName) {
+    			storesFound.add(astore);
+    		}
+    	}
+    	return storesFound;
+    }
+    
     public List<Product> getStoreProducts(BigInteger storeId) {
     	List<Product> products = new ArrayList<Product>();
     	BigInteger zero = BigInteger.valueOf(0);

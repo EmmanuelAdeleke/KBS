@@ -162,8 +162,6 @@ public class Reasoner {
 		String answer = "";
 		String questionType = "";  					// question type selects method to use in a query
 		String trimmedQuestion; 					// Question without class synonyms found.
-		List<Product> productsFound; 				// Products possibly mentioned in the question
-		List<Store> storesFound; 					// Stores possibly mentioned in the question
 		HashMap<String, Integer> detectedClasses; 	//Classes detected and their match score
 		
 		
@@ -173,13 +171,10 @@ public class Reasoner {
 		questionType = getQuestionType(question);
 		
 		// =============== Check question subject =================
-		AnalysisResult questionAnalysis  = analyseQuestion(question);
+		AnalysisResult qAn  = analyseQuestion(question);
 		
-		productsFound = questionAnalysis.productsFound;
-		storesFound = questionAnalysis.storesFound;
-		detectedClasses = questionAnalysis.detectedClasses;
-		trimmedQuestion = questionAnalysis.trimmedQuestion;
-		
+		trimmedQuestion = qAn.trimmedQuestion;
+		detectedClasses = qAn.detectedClasses;
 		System.out.println(detectedClasses.toString());		
 		
 		// =================== Generate an answer ========================//
@@ -189,20 +184,30 @@ public class Reasoner {
 			int storeScore = detectedClasses.getOrDefault("Store", 0);
 			int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
 			int sStoreScore = detectedClasses.getOrDefault("SpecificStore", 0);
+			int storeAreaScore = detectedClasses.getOrDefault("StoreArea", 0);
 			int amount = 0;
 			String subj1 = "";
 			String subj2 = "";
-			// # of such product in such store
-			if (sProdScore > 0 && sStoreScore >0) {
-				amount = myDatabase.getProdStockInStore(productsFound.get(0).getId(), storesFound.get(0).getId());
-				subj1 = productsFound.get(0).getName();
-				subj2 = storesFound.get(0).getName();
-				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
-			} 
-			// # of such product overall
-			else if (sProdScore > 0) {
-				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+			
+			// # of such product...
+			if (sProdScore > 0) {
+				subj1 = qAn.productsFound.get(0).getName();
+				// in such store
+				if (sStoreScore >0) {
+					amount = myDatabase.getProdStockInStore(qAn.productsFound.get(0).getId(), qAn.storesFound.get(0).getId());
+					subj2 = qAn.storesFound.get(0).getName();
+					answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+				} 
+				// in such area
+				else if (storeAreaScore > 0) {
+					List<Store> storesInArea = myDatabase.getStoresInCity(qAn.)					
+				}
+				// overall
+				else if (sProdScore > 0) {
+					answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+				}
 			}
+				
 		}
 		// ================= Question type not identified =============== //
 		// Let's give a generic answer with matching items.
@@ -307,7 +312,7 @@ public class Reasoner {
 		
 		
 		// Wrapper object for the result
-		AnalysisResult result = new AnalysisResult(productsFound, storesFound, detectedClasses, trimmedQuestion);
+		AnalysisResult result = new AnalysisResult(productsFound, prodClassesFound, storesFound, storeAreasFound, detectedClasses, trimmedQuestion);
 		return result;
 	}
 	
@@ -343,17 +348,21 @@ public class Reasoner {
 	
 	public static class AnalysisResult {
 		public List<Product> productsFound;
+		public List<String> prodClassesFound;
 		public List<Store> storesFound;
+		public List<String> storeAreasFound;
 		public HashMap<String, Integer> detectedClasses;
 		public String trimmedQuestion;
 		
-		//Contructor setting everything.
-		protected AnalysisResult(List<Product> productsFound, List<Store> storesFound, 
-				HashMap<String, Integer> detectedClasses, String trimmedQuestion) {
+		//Constructor setting everything.
+		protected AnalysisResult(List<Product> productsFound, List<String> prodClassesFound, List<Store> storesFound, 
+				List<String> storeAreasFound, HashMap<String, Integer> detectedClasses, String trimmedQuestion) {
 			this.productsFound = productsFound;
 			this.storesFound = storesFound;
 			this.detectedClasses = detectedClasses;
 			this.trimmedQuestion = trimmedQuestion;
+			this.storeAreasFound = storeAreasFound;
+			this.prodClassesFound = prodClassesFound;
 		}		
 	}
 	
