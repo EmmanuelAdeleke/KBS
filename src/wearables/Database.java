@@ -420,7 +420,6 @@ public class Database {
     	List<Product> prodList = new ArrayList<Product>();
     	Product aprod;
 
-    	Reasoner.printList(allProducts);
     	for	(int i = 0; i < allProducts.size(); i++){
     		aprod = allProducts.get(i);
     		if(aprod.getCategory().compareTo(prodCat) == 0){

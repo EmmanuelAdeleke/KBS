@@ -195,7 +195,7 @@ public class Reasoner {
 					}
 					cityListing += cityName;
 				}
-				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer = "We have " + amount + " " + getPlural(subj1) + " in " + cityListing + ".";
 				answer += "\nYou can find it at these stores: " + storeListing;
 			} 
 			// (# of stores that have such product)
@@ -207,7 +207,7 @@ public class Reasoner {
 			// ..overall
 			else {
 				amount = myDatabase.getTotalProductStock(prod.getId());
-				answer = "We have " + amount + " " + subj1 + "s distributed across all of our stores.";
+				answer = "We have " + amount + " " + getPlural(subj1) + " distributed across all of our stores.";
 			}
 		}
 		//// # of products of a specific category
@@ -220,7 +220,7 @@ public class Reasoner {
 				List<Product> prodList = myDatabase.getProdInStoreByCategory(store.getId(), subj1);
 				amount = prodList.size();
 				subj2 = qAn.storesFound.get(0).getName();
-				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+				answer = "We have " + amount + " " + getPlural(subj1) + " at " + subj2 + " store.";
 			} 
 			// ..in such areas (Could be more than one)
 			else if (storeAreaScore > 0) {
@@ -238,19 +238,19 @@ public class Reasoner {
 					}
 					cityListing += cityName;
 				}
-				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer = "We have " + amount + " " + getPlural(subj1) + " in " + cityListing + ".";
 				answer += "\nYou can find it at these stores: " + storeListing;
 			} 
 			// (# of stores that have such product category)
 			else if (storeScore > 0) {
 				List<Store> storeList = myDatabase.getStoresWithProdCategory(subj1);
 				amount = storeList.size();
-				answer = "There are " + amount + " stores with " + subj1 + "s in stock.\nThese are:\n" + listToString(storeList);
+				answer = "There are " + amount + " stores with " + getPlural(subj1) + " in stock.\nThese are:\n" + listToString(storeList);
 			}
 			// ..overall
 			else {
 				amount = myDatabase.getProdCategoryTotalStock(subj1);
-				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+				answer = "We have " + amount + " " + getPlural(subj1) + " distributed across our stores.";
 			} 
 		}
 		//// # of products in general in a specific store store
@@ -327,7 +327,7 @@ public class Reasoner {
 			if (sStoreScore >0) {
 				amount = myDatabase.getProdStockInStore(prod.getId(), qAn.storesFound.get(0).getId());
 				subj2 = qAn.storesFound.get(0).getName();
-				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+				answer = "We have " + amount + " " + getPlural(subj1) + " at " + subj2 + " store.";
 			} 
 			// ..in such areas (Could be more than one)
 			else if (storeAreaScore > 0) {
@@ -344,7 +344,7 @@ public class Reasoner {
 					}
 					cityListing += cityName;
 				}
-				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer = "We have " + amount + " " + getPlural(subj1) + " in " + cityListing + ".";
 				answer += "\nYou can find it at these stores: " + storeListing;
 			} 
 			// (# of stores that have such product)
@@ -356,7 +356,7 @@ public class Reasoner {
 			// ..overall
 			else {
 				amount = myDatabase.getTotalProductStock(prod.getId());
-				answer = "We have " + amount + " " + subj1 + "s distributed across all of our stores.";
+				answer = "We have " + amount + " " + getPlural(subj1) + " distributed across all of our stores.";
 			}
 		}
 		//// # of products of a specific category
@@ -369,7 +369,7 @@ public class Reasoner {
 				List<Product> prodList = myDatabase.getProdInStoreByCategory(store.getId(), subj1);
 				amount = prodList.size();
 				subj2 = qAn.storesFound.get(0).getName();
-				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+				answer = "We have " + amount + " " + getPlural(subj1) + " at " + subj2 + " store.";
 			} 
 			// ..in such areas (Could be more than one)
 			else if (storeAreaScore > 0) {
@@ -387,19 +387,19 @@ public class Reasoner {
 					}
 					cityListing += cityName;
 				}
-				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer = "We have " + amount + " " + getPlural(subj1) + " in " + cityListing + ".";
 				answer += "\nYou can find it at these stores: " + storeListing;
 			} 
 			// (# of stores that have such product category)
 			else if (storeScore > 0) {
 				List<Store> storeList = myDatabase.getStoresWithProdCategory(subj1);
 				amount = storeList.size();
-				answer = "There are " + amount + " stores with " + subj1 + "s in stock.\nThese are:\n" + listToString(storeList);
+				answer = "There are " + amount + " stores with " + getPlural(subj1) + " in stock.\nThese are:\n" + listToString(storeList);
 			}
 			// ..overall
 			else {
 				amount = myDatabase.getProdCategoryTotalStock(subj1);
-				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+				answer = "We have " + amount + " " + getPlural(subj1) + " distributed across our stores.";
 			} 
 		}
 		//// # of products in general in a specific store store
@@ -579,6 +579,14 @@ public class Reasoner {
 			listString += alist.get(i) + "\n";
 		}
 		return listString;
+	}
+	
+	public static String getPlural(String astring) {
+		String plural = astring;
+		if (astring.substring(astring.length() - 1, astring.length()).compareTo("s") != 0) {
+			plural = astring + "es";
+		}
+		return plural;
 	}
 	
 	
