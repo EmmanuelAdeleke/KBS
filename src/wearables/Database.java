@@ -87,10 +87,10 @@ public class Database {
     
     public List<String> getProdCategories() {
     	List<String> cat = new ArrayList<String>();
-    	cat.add("watch");
-    	cat.add("glass");
-    	cat.add("headphone");
-    	cat.add("jacket");
+    	cat.add("SmartWatch");
+    	cat.add("SmartGlasses");
+    	cat.add("SmartHeadphones");
+    	cat.add("SmartJackets");
     	return cat;
     }
     
@@ -126,7 +126,7 @@ public class Database {
     	return val;
     }
     
-    // ------ Product classes by keyword----------
+    // ------ Product categories by keyword----------
     
     public List<String> getProdCategoriesByKeyword (String keyword){
     	List<String> categories = getProdCategories();
@@ -134,7 +134,9 @@ public class Database {
  
     	// Check if category matches
     	for (int i = 0; i < categories.size(); i++) {
-    		if (keyword.contains(categories.get(i))) catFound.add(categories.get(i));
+    		String cat = categories.get(i).toLowerCase();
+    		cat = cat.substring(5, cat.length() - 1); //Take the "Smart" form the beginning and the s from the end.
+    		if (keyword.contains(cat)) catFound.add(categories.get(i));
     	} 
     	return catFound;
     }
@@ -312,6 +314,7 @@ public class Database {
     public int getProdCategoryTotalStock(String prodCategory) {
     	List<Product> prodList = getProdByCategory(prodCategory);
     	int totalStock = 0;
+    	
     	for (int i = 0; i < prodList.size(); i++) {
     		int prodStock = getTotalProductStock(prodList.get(i).getId());
     		totalStock += prodStock;
@@ -367,7 +370,7 @@ public class Database {
     	// Get all stores that match the keyword in some way
     	for	(int i = 0; i < store.size(); i++){
     		astore = store.get(i);
-    		if (astore.getCity() == cityName) {
+    		if (astore.getCity().compareTo(cityName) == 0) {
     			storesFound.add(astore);
     		}
     	}
@@ -413,12 +416,14 @@ public class Database {
     }
     
     public List<Product> getProdByCategory(String prodCat) {
-    	List<Product> prodList = getProducts();
+    	List<Product> allProducts = product;
+    	List<Product> prodList = new ArrayList<Product>();
     	Product aprod;
-    	
-    	for	(int i = 0; i < product.size(); i++){
-    		aprod = product.get(i);
-    		if(aprod.getCategory() == prodCat){
+
+    	Reasoner.printList(allProducts);
+    	for	(int i = 0; i < allProducts.size(); i++){
+    		aprod = allProducts.get(i);
+    		if(aprod.getCategory().compareTo(prodCat) == 0){
     			prodList.add(aprod);
     		}
     	}
@@ -433,7 +438,7 @@ public class Database {
     	
     	for	(int i = 0; i < storeProducts.size(); i++){
     		aprod = storeProducts.get(i);
-    		if(aprod.getCategory() == prodCat){
+    		if(aprod.getCategory().compareTo(prodCat) == 0){
     			prodList.add(aprod);
     		}
     	}

@@ -301,6 +301,155 @@ public class Reasoner {
 		return answer;
 	}
 	
+	public String answerShow(AnalysisResult qAn) {
+		String trimmedQuestion = qAn.trimmedQuestion; 					// Question without class synonyms found.
+		HashMap<String, Integer> detectedClasses = qAn.detectedClasses; //Classes detected and their match score
+
+		int prodScore = detectedClasses.getOrDefault("Product", 0);
+		int prodCategoryScore = detectedClasses.getOrDefault("ProductClass", 0);
+		int storeScore = detectedClasses.getOrDefault("Store", 0);
+		int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
+		int sStoreScore = detectedClasses.getOrDefault("SpecificStore", 0);
+		int storeAreaScore = detectedClasses.getOrDefault("StoreArea", 0);
+		int amount = 0;
+		@SuppressWarnings("rawtypes")
+		List listing;
+		String subj1 = "";
+		String subj2 = "";
+		String answer = "";
+		
+		////Show...
+		if (sProdScore > 0) {
+			Product prod = qAn.productsFound.get(0);
+			subj1 = prod.getName();
+			
+			// ..products in specific store
+			if (sStoreScore >0) {
+				amount = myDatabase.getProdStockInStore(prod.getId(), qAn.storesFound.get(0).getId());
+				subj2 = qAn.storesFound.get(0).getName();
+				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+			} 
+			// ..in such areas (Could be more than one)
+			else if (storeAreaScore > 0) {
+				String cityListing = "";
+				String storeListing = "";
+				for (int i = 0; i < qAn.storeAreasFound.size(); i++) {
+					String cityName = qAn.storeAreasFound.get(i);
+					amount += myDatabase.getProdStockInCity(prod.getId(), cityName);
+					storeListing += "\n" + listToString(myDatabase.getStoresByCity(cityName));
+					
+					//If list has more than one item and it is the last item in the list
+					if (qAn.storeAreasFound.size() > 1 && qAn.storeAreasFound.size() - i == 1){
+						cityListing += " and";
+					}
+					cityListing += cityName;
+				}
+				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer += "\nYou can find it at these stores: " + storeListing;
+			} 
+			// (# of stores that have such product)
+			else if (storeScore > 0) {
+				List<Store> storeList = myDatabase.getStoresWithProd(prod.getId());
+				amount = storeList.size();
+				answer = "There are " + amount + " stores with " + prod.getName() + " in stock.\nThese are:\n" + listToString(storeList);
+			}
+			// ..overall
+			else {
+				amount = myDatabase.getTotalProductStock(prod.getId());
+				answer = "We have " + amount + " " + subj1 + "s distributed across all of our stores.";
+			}
+		}
+		//// # of products of a specific category
+		else if (prodCategoryScore > 0) {
+			subj1 = qAn.prodCategoriesFound.get(0);
+			
+			// ..in such store
+			if (sStoreScore >0) {
+				Store store = qAn.storesFound.get(0);
+				List<Product> prodList = myDatabase.getProdInStoreByCategory(store.getId(), subj1);
+				amount = prodList.size();
+				subj2 = qAn.storesFound.get(0).getName();
+				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+			} 
+			// ..in such areas (Could be more than one)
+			else if (storeAreaScore > 0) {
+				amount = 0;
+				String cityListing = "";
+				String storeListing = "";
+				for (int i = 0; i < qAn.storeAreasFound.size(); i++) {
+					String cityName = qAn.storeAreasFound.get(i);
+					amount += myDatabase.getProdCategoryStockInCity(subj1, cityName);
+					storeListing += "\n" + listToString(myDatabase.getStoresByCity(cityName));
+					
+					//If list has more than one item and it is the last item in the list
+					if (qAn.storeAreasFound.size() > 1 && qAn.storeAreasFound.size() - i == 1){
+						cityListing += " and";
+					}
+					cityListing += cityName;
+				}
+				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer += "\nYou can find it at these stores: " + storeListing;
+			} 
+			// (# of stores that have such product category)
+			else if (storeScore > 0) {
+				List<Store> storeList = myDatabase.getStoresWithProdCategory(subj1);
+				amount = storeList.size();
+				answer = "There are " + amount + " stores with " + subj1 + "s in stock.\nThese are:\n" + listToString(storeList);
+			}
+			// ..overall
+			else {
+				amount = myDatabase.getProdCategoryTotalStock(subj1);
+				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+			} 
+		}
+		//// # of products in general in a specific store store
+		else if (sStoreScore > 0) {
+			BigInteger storeId = qAn.storesFound.get(0).getId();
+			String storeName = qAn.storesFound.get(0).getName();
+			amount = myDatabase.getTotalStoreStock(storeId);
+			List<Product> prodList = myDatabase.getStoreProducts(storeId);
+			
+			answer = "There are " + amount + " products at the " + storeName + ", amongst which you can find:\n" + listToString(prodList);		
+		}
+		//// # of products in general ...
+		else if (prodScore > 0) {
+			// .. in specific area
+			if (storeAreaScore > 0) {
+				String cityName = qAn.storeAreasFound.get(0);
+				List<Store> storeList = myDatabase.getStoresByCity(cityName);
+				for (int i = 0; i < storeList.size(); i++) {
+					amount += myDatabase.getTotalStoreStock(storeList.get(i).getId());
+				}
+				answer = "There is a total of " + amount + " products in our stores in " + cityName + ".";						
+			}
+			// ..overall
+			else {
+				amount = myDatabase.getTotalStock();		
+				answer = "There is a total of " + amount + " products across all of our stores.";
+			}			
+		}
+		//# of stores..
+		else if (storeScore > 0) {
+			// .. in specific area
+			if (storeAreaScore > 0) {
+				String cityName = qAn.storeAreasFound.get(0);
+				amount = myDatabase.getStoresByCity(cityName).size();
+				answer = "We have " + amount + " stores in " + cityName;
+			}
+			// .. in general
+			else {
+				amount = myDatabase.getStores().size();
+				answer = "We have " + amount + " stores distributed throughout all of the UK.";
+			}		
+		}
+		// If is none of the above, then I don't know.
+		else {
+			answer = "I didn't quite get the end there. What exactly would you like to know the amount of?";
+		}
+		
+		return answer;
+		
+	}
 	public String answerUnknownCase(AnalysisResult qAn) {
 		String answer = "";
 		// Let's give a generic answer with matching items.			
