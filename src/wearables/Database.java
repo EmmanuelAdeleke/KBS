@@ -253,6 +253,7 @@ public class Database {
     }
   //========================== END of content from Keyword ===============================//
     
+    //============================== Getting numbers ===============================//
     public int getProdStockInStore(BigInteger prodId, BigInteger storeId) {
     	BigInteger stock = BigInteger.valueOf(0);
     	for	(int i = 0; i < availability.size(); i++){
@@ -265,6 +266,17 @@ public class Database {
     	}
     	return stock.intValue();
     }
+    
+    public int getProdStockInCity(BigInteger prodId, String cityName) {
+    	List<Store> storesInArea = getStoresByCity(cityName);
+    	int stock = 0;
+		for (int i = 0; i < storesInArea.size(); i++){
+			stock += getProdStockInStore(prodId, storesInArea.get(i).getId());
+		}
+		return stock;
+    }
+    
+    //============================== Getting stores ===============================//
     
     public List<Store> getStoresWithProd(BigInteger prodId) {
     	List<Store> stores = new ArrayList<Store>();
@@ -281,7 +293,7 @@ public class Database {
     	return stores;
     }
     
-    public List<Store> getStoresInCity(String cityName) {
+    public List<Store> getStoresByCity(String cityName) {
     	List<Store> storesFound = new ArrayList<Store>();
     	Store astore;
     	// Get all stores that match the keyword in some way
@@ -294,6 +306,7 @@ public class Database {
     	return storesFound;
     }
     
+    //============================== Getting products ===============================//
     public List<Product> getStoreProducts(BigInteger storeId) {
     	List<Product> products = new ArrayList<Product>();
     	BigInteger zero = BigInteger.valueOf(0);
@@ -308,5 +321,7 @@ public class Database {
     	}
     	return products;
     }
+    
+    
     
 }

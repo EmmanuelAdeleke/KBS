@@ -191,16 +191,19 @@ public class Reasoner {
 			
 			// # of such product...
 			if (sProdScore > 0) {
-				subj1 = qAn.productsFound.get(0).getName();
+				Product prod = qAn.productsFound.get(0);
+				subj1 = prod.getName();
+				
 				// in such store
 				if (sStoreScore >0) {
-					amount = myDatabase.getProdStockInStore(qAn.productsFound.get(0).getId(), qAn.storesFound.get(0).getId());
+					amount = myDatabase.getProdStockInStore(prod.getId(), qAn.storesFound.get(0).getId());
 					subj2 = qAn.storesFound.get(0).getName();
 					answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
 				} 
-				// in such area
+				// in such areas (Could be more than one)
 				else if (storeAreaScore > 0) {
-					List<Store> storesInArea = myDatabase.getStoresInCity(qAn.)					
+					amount = 0;
+									
 				}
 				// overall
 				else if (sProdScore > 0) {
