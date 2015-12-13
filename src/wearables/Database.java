@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -184,6 +185,27 @@ public class Database {
     	return prods;
     }
     
+    // ------ Store Area by keyword----------
+    @SuppressWarnings("unchecked")
+	public List<String> getStoreAreaByKeyword(String keyword) {
+    	
+    	//Use a LinkedHashSet to prevent duplicates;
+    	LinkedHashSet<String> foundAreas = new LinkedHashSet<String>();
+    	boolean regionMatch, cityMatch;
+    	Store astore;
+    	
+    	for	(int i = 0; i < store.size(); i++){
+    		astore = store.get(i);
+    		regionMatch = twoWayContain(keyword, astore.getRegion().toLowerCase());
+    		cityMatch = twoWayContain(keyword, astore.getCity().toLowerCase());
+    		if(regionMatch || cityMatch){
+    			foundAreas.add(astore.getCity());
+    		}
+    	}
+    	
+    	return (List<String>) foundAreas;
+    }
+    
     // ------ Stores by keyword----------
     
     // Returns how much a store matches a keyword. From 0 to 14.
@@ -194,8 +216,6 @@ public class Database {
     	if (twoWayContain(keyword, store.getName().toLowerCase())) match += 5;
     	if (twoWayContain(keyword, store.getAddress().toLowerCase())) match += 3;	
     	if (twoWayContain(keyword, store.getPostcode().toLowerCase())) match += 10;
-    	if (twoWayContain(keyword, store.getCity().toLowerCase())) match += 5;
-    	if (twoWayContain(keyword, store.getRegion().toLowerCase())) match += 3;
     	if (twoWayContain(keyword, store.getOpeningTimes().toLowerCase())) match += 10;
     	return match;
     }

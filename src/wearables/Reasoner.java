@@ -29,7 +29,7 @@ public class Reasoner {
 	public Object CurrentSubject; 			 // Last Object dealt with
 	public Integer CurrentSubjectIndex;      // Last Index used
 	
-	public String[][] questionMapping = new String [26][2]; //Holds words and their matching question type.
+	public String[][] questionMapping = new String [25][2]; //Holds words and their matching question type.
 	
 	public Reasoner(String fileName) {
 		xmlFile = new File(fileName + ".xml");
@@ -184,7 +184,7 @@ public class Reasoner {
 		
 		// =================== Generate an answer ========================//
 		if (questionType == "howMany") {
-			//products in store, of specific product overall, of specific product in specific store, store overall, of a specific product, stores in, stores open after,
+			//of specific product in specific store, store overall, of a specific product, stores in, stores open after,
 			int prodScore = detectedClasses.getOrDefault("Product", 0);
 			int storeScore = detectedClasses.getOrDefault("Store", 0);
 			int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
@@ -195,7 +195,13 @@ public class Reasoner {
 			// # of such product in such store
 			if (sProdScore > 0 && sStoreScore >0) {
 				amount = myDatabase.getProdStockInStore(productsFound.get(0).getId(), storesFound.get(0).getId());
-				subj1 = productsFound.get(0).get
+				subj1 = productsFound.get(0).getName();
+				subj2 = storesFound.get(0).getName();
+				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+			} 
+			// # of such product overall
+			else if (sProdScore > 0) {
+				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
 			}
 		}
 		// ================= Question type not identified =============== //
@@ -207,7 +213,8 @@ public class Reasoner {
 				answer += "\nProducts:\n" +	listToString(productsFound);
 			}
 			if (storesFound.size() > 0) {
-				answer += "\nStores:\n" + listToString(productsFound);
+				answer += "\nStores:\n" + listToString(storesFound);
+				printList(storesFound);
 			}
 		}
 		return answer;
@@ -290,7 +297,7 @@ public class Reasoner {
 		if (storesFound.size() > 0 )  detectedClasses.put("Store", score); 
 		
 		prodClassesFound = myDatabase.getProdClassesByKeyword(trimmedQuestion);
-		score = prodClassesFound.size()*2;
+		score = prodClassesFound.size() * 5;
 		if (prodClassesFound.size() > 0 )  detectedClasses.put("ProductClass", score);
 		
 		// Wrapper object for the result
