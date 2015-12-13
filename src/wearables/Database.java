@@ -128,7 +128,7 @@ public class Database {
     
     // ------ Product classes by keyword----------
     
-    public List<String> getProdClassesByKeyword (String keyword){
+    public List<String> getProdCategoriesByKeyword (String keyword){
     	List<String> categories = getProdCategories();
     	List<String> catFound = new ArrayList<String>();
  
@@ -352,15 +352,28 @@ public class Database {
     	return products;
     }
     
-    public List<Product> getProdByCategory(String prodClass) {
-    	//Use a LinkedHashSet to prevent duplicates;
+    public List<Product> getProdByCategory(String prodCat) {
     	List<Product> prodList = new ArrayList<Product>();
-    	boolean regionMatch, cityMatch;
     	Product aprod;
     	
     	for	(int i = 0; i < product.size(); i++){
     		aprod = product.get(i);
-    		if(aprod.getCategory() == prodClass){
+    		if(aprod.getCategory() == prodCat){
+    			prodList.add(aprod);
+    		}
+    	}
+
+    	return prodList;
+    }
+    
+    public List<Product> getProdInStoreByCategory(BigInteger storeId, String prodCat) {
+    	List<Product> storeProducts = getStoreProducts(storeId);
+    	List<Product> prodList = new ArrayList<Product>();
+    	Product aprod;
+    	
+    	for	(int i = 0; i < storeProducts.size(); i++){
+    		aprod = storeProducts.get(i);
+    		if(aprod.getCategory() == prodCat){
     			prodList.add(aprod);
     		}
     	}

@@ -188,7 +188,7 @@ public class Reasoner {
 		HashMap<String, Integer> detectedClasses = qAn.detectedClasses; //Classes detected and their match score
 
 		int prodScore = detectedClasses.getOrDefault("Product", 0);
-		int prodClassScore = detectedClasses.getOrDefault("ProductClass", 0);
+		int prodCategoryScore = detectedClasses.getOrDefault("ProductClass", 0);
 		int storeScore = detectedClasses.getOrDefault("Store", 0);
 		int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
 		int sStoreScore = detectedClasses.getOrDefault("SpecificStore", 0);
@@ -243,7 +243,8 @@ public class Reasoner {
 		//# in a specific store store
 		else if (sStoreScore > 0) {
 			// # of a prod class in specific store
-			if (prodClassScore > 0) {
+			if (prodCategoryScore > 0) {
+				List<Product> prodList = myDatabase.getProdByCategory(qAn.prodCategoriesFound.get(0));
 				
 				
 			}
@@ -317,7 +318,7 @@ public class Reasoner {
 		// List to hold results found
 		List<Product> productsFound;
 		List<Store> storesFound;
-		List<String> prodClassesFound;
+		List<String> prodCategoriesFound;
 		List<String> storeAreasFound;
 		
 		
@@ -351,9 +352,9 @@ public class Reasoner {
 		score = productsFound.size()*2;
 		if (productsFound.size() > 0 ) detectedClasses.put("SpecificProduct", score); 
 		
-		prodClassesFound = myDatabase.getProdClassesByKeyword(trimmedQuestion);
-		score = prodClassesFound.size() * 5;
-		if (prodClassesFound.size() > 0 )  detectedClasses.put("ProductClass", score);
+		prodCategoriesFound = myDatabase.getProdCategoriesByKeyword(trimmedQuestion);
+		score = prodCategoriesFound.size() * 5;
+		if (prodCategoriesFound.size() > 0 )  detectedClasses.put("ProductClass", score);
 		
 		storesFound = myDatabase.getStoresByKeyword(trimmedQuestion);
 		score = storesFound.size()*2;
@@ -365,7 +366,7 @@ public class Reasoner {
 		
 		
 		// Wrapper object for the result
-		AnalysisResult result = new AnalysisResult(productsFound, prodClassesFound, storesFound, storeAreasFound, detectedClasses, trimmedQuestion);
+		AnalysisResult result = new AnalysisResult(productsFound, prodCategoriesFound, storesFound, storeAreasFound, detectedClasses, trimmedQuestion);
 		return result;
 	}
 	
@@ -401,21 +402,21 @@ public class Reasoner {
 	
 	public static class AnalysisResult {
 		public List<Product> productsFound;
-		public List<String> prodClassesFound;
+		public List<String> prodCategoriesFound;
 		public List<Store> storesFound;
 		public List<String> storeAreasFound;
 		public HashMap<String, Integer> detectedClasses;
 		public String trimmedQuestion;
 		
 		//Constructor setting everything.
-		protected AnalysisResult(List<Product> productsFound, List<String> prodClassesFound, List<Store> storesFound, 
+		protected AnalysisResult(List<Product> productsFound, List<String> prodCategoriesFound, List<Store> storesFound, 
 				List<String> storeAreasFound, HashMap<String, Integer> detectedClasses, String trimmedQuestion) {
 			this.productsFound = productsFound;
 			this.storesFound = storesFound;
 			this.detectedClasses = detectedClasses;
 			this.trimmedQuestion = trimmedQuestion;
 			this.storeAreasFound = storeAreasFound;
-			this.prodClassesFound = prodClassesFound;
+			this.prodCategoriesFound = prodCategoriesFound;
 		}		
 	}
 	
