@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 public class Reasoner {
 
@@ -22,7 +23,7 @@ public class Reasoner {
 	public Vector<String> storeSyn = new Vector<String>(); 
 	
 	//A list to hold words and their matching question type.
-	public String[][] questionMapping = new String [25][2]; 
+	public HashMap<String, String> questionMapping = new HashMap<String, String>(); 
 	
 	public static void main(String args[]) throws FileNotFoundException {
 		Reasoner reasoner = new Reasoner("Wearables");
@@ -71,84 +72,53 @@ public class Reasoner {
 		storeSyn.add("store");
 		storeSyn.add("seller");
 		
-		int x = 0;
-		questionMapping[x][0] = "where";
-		questionMapping[x][1] = "where";
+		questionMapping.put("where", "where");
 		
-		questionMapping[++x][0] = "closest";
-		questionMapping[x][1] = "where";
+		questionMapping.put("closest", "where");
 		
-		questionMapping[++x][0] = "which way";
-		questionMapping[x][1] = "where";
+		questionMapping.put("which way", "where");
 		
-		questionMapping[++x][0] = "postcode";
-		questionMapping[x][1] = "where";
+		questionMapping.put("postcode", "where");
 		
-		questionMapping[++x][0] = "how many";
-		questionMapping[x][1] = "howmany";
+		questionMapping.put("how many", "howmany");
 		
-		questionMapping[++x][0] = "number of";
-		questionMapping[x][1] = "howmany";
+		questionMapping.put("number of", "howmany");
 		
-		questionMapping[++x][0] = "amount of";
-		questionMapping[x][1] = "howmany";
+		questionMapping.put("amount of", "howmany");
 		
-		questionMapping[++x][0] = "count ";
-		questionMapping[x][1] = "howmany";
+		questionMapping.put("count ", "howmany");
 		
-		questionMapping[++x][0] = "total ";
-		questionMapping[x][1] = "howmany";
+		questionMapping.put("total ", "howmany");
 	
-		questionMapping[++x][0] = "there any ";
-		questionMapping[x][1] = "howmany";
+		questionMapping.put("there any ", "howmany");
 	
-		questionMapping[++x][0] = "have any ";
-		questionMapping[x][1] = "howmany";
+		questionMapping.put("have any ", "howmany");
 		
-		questionMapping[++x][0] = "how much";
-		questionMapping[x][1] = "howmuch";
+		questionMapping.put("how much", "howmuch");
 		
-		questionMapping[++x][0] = "s the cost";
-		questionMapping[x][1] = "howmuch";
+		questionMapping.put("s the cost", "howmuch");
 		
-		questionMapping[++x][0] = "price";
-		questionMapping[x][1] = "howmuch";
+		questionMapping.put("price", "howmuch");
 		
-		questionMapping[++x][0] = "show ";
-		questionMapping[x][1] = "show";
+		questionMapping.put("show ", "show");
 		
-//		questionMapping[++x][0] = "do you have";
-//		questionMapping[x][1] = "show";
+		questionMapping.put("do you have any", "show");
 		
-		questionMapping[++x][0] = "describe";
-		questionMapping[x][1] = "show";
+		questionMapping.put("describe", "show");
 		
-		questionMapping[++x][0] = "what are";
-		questionMapping[x][1] = "show";
+		questionMapping.put("store open", "show");	
 		
-		questionMapping[++x][0] = "what is";
-		questionMapping[x][1] = "show";
+		questionMapping.put("bye", "farewell");
 		
-		questionMapping[++x][0] = "store open";
-		questionMapping[x][1] = "show";	
+		questionMapping.put("farewell", "farewell");
 		
-		questionMapping[++x][0] = "bye";
-		questionMapping[x][1] = "farewell";
+		questionMapping.put("see you", "farewell");
 		
-		questionMapping[++x][0] = "farewell";
-		questionMapping[x][1] = "farewell";
+		questionMapping.put("hasta la vista", "farewell");
 		
-		questionMapping[++x][0] = "see you";
-		questionMapping[x][1] = "farewell";
+		questionMapping.put("cheers", "farewell");
 		
-		questionMapping[++x][0] = "hasta la vista";
-		questionMapping[x][1] = "farewell";
-		
-		questionMapping[++x][0] = "cheers";
-		questionMapping[x][1] = "farewell";
-		
-		questionMapping[++x][0] = "thanks";
-		questionMapping[x][1] = "farewell";
+		questionMapping.put("thanks", "farewell");
 	}
 	
 
@@ -162,6 +132,7 @@ public class Reasoner {
 		
 		// Check question type 
 		questionType = getQuestionType(question);
+//		System.out.println(questionType);
 		
 		// Check question subject
 		AnalysisResult qAn  = analyseQuestion(question);
@@ -234,9 +205,9 @@ public class Reasoner {
 				answer = "There are " + amount + " stores with " + prod.getName() + " in stock.\nThese are:\n" + listToString(storeList);
 			}
 			// ..overall
-			else if (sProdScore > 0) {
+			else {
 				amount = myDatabase.getTotalProductStock(prod.getId());
-				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+				answer = "We have " + amount + " " + subj1 + "s distributed across all of our stores.";
 			}
 		}
 		//// # of products of a specific category
@@ -277,10 +248,10 @@ public class Reasoner {
 				answer = "There are " + amount + " stores with " + subj1 + "s in stock.\nThese are:\n" + listToString(storeList);
 			}
 			// ..overall
-			else if (sProdScore > 0) {
+			else {
 				amount = myDatabase.getProdCategoryTotalStock(subj1);
 				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
-			}
+			} 
 		}
 		//// # of products in general in a specific store store
 		else if (sStoreScore > 0) {
@@ -305,7 +276,7 @@ public class Reasoner {
 			// ..overall
 			else {
 				amount = myDatabase.getTotalStock();		
-				answer = "There is a total of " + amount + " across all of our stores.";
+				answer = "There is a total of " + amount + " products across all of our stores.";
 			}			
 		}
 		//# of stores..
@@ -324,7 +295,7 @@ public class Reasoner {
 		}
 		// If is none of the above, then I don't know.
 		else {
-			answer = answerUnknownCase(qAn);
+			answer = "I didn't quite get the end there. What exactly would you like to know the amount of?";
 		}
 		
 		return answer;
@@ -340,7 +311,6 @@ public class Reasoner {
 			}
 			if (qAn.storesFound.size() > 0) {
 				answer += "\nStores:\n" + listToString(qAn.storesFound);
-				printList(qAn.storesFound);
 			}
 		} else { //Nothing identified at all
 			answer = "Uh, I didn't quite catch that. Can you rephrase it, please.";
@@ -352,17 +322,17 @@ public class Reasoner {
 	//=============================================================================================
 	
 	public String getQuestionType(String question) {
-		String keyword, type, questionType = "";
+		String questionType = "";
 		
 		//Check against all keywords to determine the question type.
-		for (int i = 0; i < questionMapping.length; i++) {	
-			keyword = questionMapping[i][0];
-			type = questionMapping[i][1];
+		
+		for (String keyword : questionMapping.keySet()) {
 			if (question.contains(keyword)){
-				questionType = type; 
-				question = question.replace(keyword, "<b>" + keyword + "</b>");
+				questionType = questionMapping.get(keyword); 
+				question.replaceAll(keyword, "<b>" + keyword + "</b>");
 			}
 		}
+		
 		return questionType;
 	}
 	
@@ -403,7 +373,7 @@ public class Reasoner {
 					detectedClasses.put(className, score + 2); 
 
 					question = question.replace(synonym, "<b>"+synonym+"</b>");
-					System.out.println("Class type " + className + " recognised.");
+//					System.out.println("Class type " + className + " recognised.");
 
 					trimmedQuestion = trimmedQuestion.replace(synonym, " ");
 				}

@@ -312,7 +312,6 @@ public class Database {
     public int getProdCategoryTotalStock(String prodCategory) {
     	List<Product> prodList = getProdByCategory(prodCategory);
     	int totalStock = 0;
-    	
     	for (int i = 0; i < prodList.size(); i++) {
     		int prodStock = getTotalProductStock(prodList.get(i).getId());
     		totalStock += prodStock;
@@ -324,9 +323,9 @@ public class Database {
     public int getTotalProductStock(BigInteger prodId) {
     	List<Availability> prodAvailabilityList = getAvailability();
     	int totalStock = 0;
-    	
+
     	for (int i = 0; i < prodAvailabilityList.size(); i++) {
-    		if (prodAvailabilityList.get(i).getProductId() == prodId) {
+    		if (prodAvailabilityList.get(i).getProductId().compareTo(prodId) == 0) {
     			totalStock += prodAvailabilityList.get(i).getQuantity().intValue();
     		}
     	}
@@ -414,7 +413,7 @@ public class Database {
     }
     
     public List<Product> getProdByCategory(String prodCat) {
-    	List<Product> prodList = new ArrayList<Product>();
+    	List<Product> prodList = getProducts();
     	Product aprod;
     	
     	for	(int i = 0; i < product.size(); i++){
