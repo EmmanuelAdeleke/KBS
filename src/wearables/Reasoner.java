@@ -198,18 +198,18 @@ public class Reasoner {
 		String subj2 = "";
 		String answer = "";
 		
-		// ++++ # of such product...
+		//// # of such product...
 		if (sProdScore > 0) {
 			Product prod = qAn.productsFound.get(0);
 			subj1 = prod.getName();
 			
-			// in such store
+			// ..in such store
 			if (sStoreScore >0) {
 				amount = myDatabase.getProdStockInStore(prod.getId(), qAn.storesFound.get(0).getId());
 				subj2 = qAn.storesFound.get(0).getName();
 				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
 			} 
-			// in such areas (Could be more than one)
+			// ..in such areas (Could be more than one)
 			else if (storeAreaScore > 0) {
 				String cityListing = "";
 				String storeListing = "";
@@ -233,17 +233,17 @@ public class Reasoner {
 				amount = storeList.size();
 				answer = "There are " + amount + " stores with " + prod.getName() + " in stock.\nThese are:\n" + listToString(storeList);
 			}
-			// overall
+			// ..overall
 			else if (sProdScore > 0) {
 				amount = myDatabase.getTotalProductStock(prod.getId());
 				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
 			}
 		}
-		// ++++ # of products of a specific category
+		//// # of products of a specific category
 		else if (prodCategoryScore > 0) {
 			subj1 = qAn.prodCategoriesFound.get(0);
 			
-			// in such store
+			// ..in such store
 			if (sStoreScore >0) {
 				Store store = qAn.storesFound.get(0);
 				List<Product> prodList = myDatabase.getProdInStoreByCategory(store.getId(), subj1);
@@ -251,7 +251,7 @@ public class Reasoner {
 				subj2 = qAn.storesFound.get(0).getName();
 				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
 			} 
-			// in such areas (Could be more than one)
+			// ..in such areas (Could be more than one)
 			else if (storeAreaScore > 0) {
 				amount = 0;
 				String cityListing = "";
@@ -276,25 +276,55 @@ public class Reasoner {
 				amount = storeList.size();
 				answer = "There are " + amount + " stores with " + subj1 + "s in stock.\nThese are:\n" + listToString(storeList);
 			}
-			// overall
+			// ..overall
 			else if (sProdScore > 0) {
 				amount = myDatabase.getProdCategoryTotalStock(subj1);
 				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
 			}
 		}
-		// ++++ # in a specific store store
+		//// # of products in general in a specific store store
 		else if (sStoreScore > 0) {
-			Store store = qAn.storesFound.get(0);
-			// # of products in general in specific store
-			else {
-				BigInteger storeId = qAn.storesFound.get(0).getId();
-				String storeName = qAn.storesFound.get(0).getName();
-				amount = myDatabase.getTotalStoreStock(storeId);
-				List<Product> prodList = myDatabase.getStoreProducts(storeId);
-				
-				answer = "There are " + amount + " products at the " + storeName + ", amongst which you can find:\n" + listToString(prodList);
-			}
+			BigInteger storeId = qAn.storesFound.get(0).getId();
+			String storeName = qAn.storesFound.get(0).getName();
+			amount = myDatabase.getTotalStoreStock(storeId);
+			List<Product> prodList = myDatabase.getStoreProducts(storeId);
 			
+			answer = "There are " + amount + " products at the " + storeName + ", amongst which you can find:\n" + listToString(prodList);		
+		}
+		//// # of products in general ...
+		else if (prodScore > 0) {
+			// .. in specific area
+			if (storeAreaScore > 0) {
+				String cityName = qAn.storeAreasFound.get(0);
+				List<Store> storeList = myDatabase.getStoresByCity(cityName);
+				for (int i = 0; i < storeList.size(); i++) {
+					amount += myDatabase.getTotalStoreStock(storeList.get(i).getId());
+				}
+				answer = "There is a total of " + amount + " products in our stores in " + cityName + ".";						
+			}
+			// ..overall
+			else {
+				amount = myDatabase.getTotalStock();		
+				answer = "There is a total of " + amount + " across all of our stores.";
+			}			
+		}
+		//# of stores..
+		else if (storeScore > 0) {
+			// .. in specific area
+			if (storeAreaScore > 0) {
+				String cityName = qAn.storeAreasFound.get(0);
+				amount = myDatabase.getStoresByCity(cityName).size();
+				answer = "We have " + amount + " stores in " + cityName;
+			}
+			// .. in general
+			else {
+				amount = myDatabase.getStores().size();
+				answer = "We have " + amount + " stores distributed throughout all of the UK.";
+			}		
+		}
+		// If is none of the above, then I don't know.
+		else {
+			answer = answerUnknownCase(qAn);
 		}
 		
 		return answer;
@@ -456,6 +486,7 @@ public class Reasoner {
 			this.prodCategoriesFound = prodCategoriesFound;
 		}		
 	}
+
 	
 	//=============================================================================================
 	//=================================== Test routine ============================================

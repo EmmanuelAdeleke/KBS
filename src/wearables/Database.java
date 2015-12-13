@@ -334,6 +334,17 @@ public class Database {
     	return totalStock;
     }
     
+    public int getTotalStock() { //Total stock of all products
+    	List<Availability> prodAvailabilityList = getAvailability();
+    	int totalStock = 0;
+    	
+    	for (int i = 0; i < prodAvailabilityList.size(); i++) {
+    		totalStock += prodAvailabilityList.get(i).getQuantity().intValue();
+    	}
+    	
+    	return totalStock;
+    }
+    
     //============================== Getting stores ===============================//
     
     public List<Store> getStoresWithProd(BigInteger prodId) {
