@@ -242,11 +242,12 @@ public class Reasoner {
 		}
 		//# in a specific store store
 		else if (sStoreScore > 0) {
+			Store store = qAn.storesFound.get(0);
 			// # of a prod class in specific store
 			if (prodCategoryScore > 0) {
-				List<Product> prodList = myDatabase.getProdByCategory(qAn.prodCategoriesFound.get(0));
-				
-				
+				String categoryFound = qAn.prodCategoriesFound.get(0);
+				List<Product> prodList = myDatabase.getProdInStoreByCategory(store.getId(), categoryFound);
+				answer = "We have " + amount + " " + categoryFound + "s at the " + store.getName() + " store.";
 			}
 			// # of products in general in specific store
 			else {
