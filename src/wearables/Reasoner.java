@@ -109,8 +109,8 @@ public class Reasoner {
 		questionMapping[++x][0] = "show ";
 		questionMapping[x][1] = "show";
 		
-		questionMapping[++x][0] = "do you have";
-		questionMapping[x][1] = "show";
+//		questionMapping[++x][0] = "do you have";
+//		questionMapping[x][1] = "show";
 		
 		questionMapping[++x][0] = "describe";
 		questionMapping[x][1] = "show";
@@ -159,7 +159,7 @@ public class Reasoner {
 	}
 	
 	public String generateAnswer(String question) {
-		
+		String answer = "";
 		String questionType = "";  					// question type selects method to use in a query
 		String trimmedQuestion; 					// Question without class synonyms found.
 		List<Product> productsFound; 				// Products possibly mentioned in the question
@@ -169,10 +169,10 @@ public class Reasoner {
 		
 		question = question.toLowerCase(); // all in lower case because thats easier to analyse
 		
-		// =================== Check the question type ==================
+		// ================= Check question type ==================
 		questionType = getQuestionType(question);
 		
-		// ============ Check the Subject of the Question ===============
+		// =============== Check question subject =================
 		AnalysisResult questionAnalysis  = analyseQuestion(question);
 		
 		productsFound = questionAnalysis.productsFound;
@@ -180,16 +180,28 @@ public class Reasoner {
 		detectedClasses = questionAnalysis.detectedClasses;
 		trimmedQuestion = questionAnalysis.trimmedQuestion;
 		
-		
-		printList(productsFound);
-		printList(storesFound);
 		System.out.println(detectedClasses.toString());		
 		
-		
+		// =================== Generate an answer ========================//
+		if (questionType == "howMany") {
+			//products in store, of specific product overall, of specific product in specific store, store overall, of a specific product, stores in, stores open after,
+			int prodScore = detectedClasses.getOrDefault("Product", 0);
+			int storeScore = detectedClasses.getOrDefault("Store", 0);
+			int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
+			int sStoreScore = detectedClasses.getOrDefault("SpecificStore", 0);
+			int amount = 0;
+			String subj1 = "";
+			String subj2 = "";
+			// # of such product in such store
+			if (sProdScore > 0 && sStoreScore >0) {
+				amount = myDatabase.getProdStockInStore(productsFound.get(0).getId(), storesFound.get(0).getId());
+				subj1 = productsFound.get(0).get
+			}
+		}
 		// ================= Question type not identified =============== //
 		// Let's give a generic answer with matching items.
 		
-		if (questiontype == "" && (productsFound.size() + storesFound.size()) > 0) {
+		if (questionType == "" && (productsFound.size() + storesFound.size()) > 0) {
 			answer = "Here are some results that may interest you: \n";
 			if (productsFound.size() > 0) {
 				answer += "\nProducts:\n" +	listToString(productsFound);
@@ -201,48 +213,6 @@ public class Reasoner {
 		return answer;
 	}
 	
-	public static void test() {
-		BigInteger prodId = BigInteger.valueOf(1);
-		System.out.println("Product with id: " + prodId);
-		System.out.println(myDatabase.getProdById(prodId));
-		System.out.println("");
-		
-		BigInteger storeId = BigInteger.valueOf(111);
-		System.out.println("Store with id: " + storeId);
-		System.out.println(myDatabase.getStoreById(storeId));
-		System.out.println("");
-		
-		System.out.println("Getting availability of product of id " + prodId + " in store with id " + storeId + ".");
-		System.out.println(myDatabase.getProdStockInStore(prodId, storeId));
-		System.out.println("");
-		
-		List<Store> avStores;
-		System.out.println("Stores with product of id " + prodId);
-		avStores = myDatabase.getStoresWithProd(prodId);
-		for(int i = 0; i < avStores.size(); i++) {
-			System.out.println(avStores.get(i));
-		}
-		
-		List<Product> avProd;
-		System.out.println("Getting products in store " + storeId);
-		avProd = myDatabase.getStoreProducts(storeId);
-		for(int i = 0; i < avProd.size(); i++) {
-			System.out.println(avProd.get(i));
-		}
-		
-		String keyword = "Pebble Watch";
-		System.out.println("\nGetting product matches for " + keyword);
-		printList(myDatabase.getProductsByKeyword(keyword));
-		
-		
-		keyword = "London";
-		System.out.println("\nGetting store matches for " + keyword);
-		printList(myDatabase.getStoresByKeyword(keyword));
-		
-		keyword = "Surrey";
-		System.out.println("\nGetting store matches for " + keyword);
-		printList(myDatabase.getStoresByKeyword(keyword));
-	}
 	
 	//=============================================================================================
 	//============================ Question analysis functions ====================================
@@ -282,6 +252,7 @@ public class Reasoner {
 		// List to hold results found
 		List<Product> productsFound;
 		List<Store> storesFound;
+		List<String> prodClassesFound;
 		
 		
 		// Check for class synonyms
@@ -311,13 +282,16 @@ public class Reasoner {
 		// Maybe the question is asking for a specific item, so let's search using everything in
 		// the question that is not a found synonym as a keyword.
 		productsFound = myDatabase.getProductsByKeyword(trimmedQuestion);
-		score = detectedClasses.getOrDefault("Product", 0);
-		detectedClasses.put("Product", score + 5); 
+		score = productsFound.size()*2;
+		if (productsFound.size() > 0 ) detectedClasses.put("SpecificProduct", score); 
 		
 		storesFound = myDatabase.getStoresByKeyword(trimmedQuestion);
-		score = detectedClasses.getOrDefault("Store", 0);
-		detectedClasses.put("Store", score + 5); 
+		score = storesFound.size()*2;
+		if (storesFound.size() > 0 )  detectedClasses.put("Store", score); 
 		
+		prodClassesFound = myDatabase.getProdClassesByKeyword(trimmedQuestion);
+		score = prodClassesFound.size()*2;
+		if (prodClassesFound.size() > 0 )  detectedClasses.put("ProductClass", score);
 		
 		// Wrapper object for the result
 		AnalysisResult result = new AnalysisResult(productsFound, storesFound, detectedClasses, trimmedQuestion);
@@ -368,6 +342,53 @@ public class Reasoner {
 			this.detectedClasses = detectedClasses;
 			this.trimmedQuestion = trimmedQuestion;
 		}		
+	}
+	
+	//=============================================================================================
+	//=================================== Test routine ============================================
+	//=============================================================================================
+	
+	public static void test() {
+		BigInteger prodId = BigInteger.valueOf(1);
+		System.out.println("Product with id: " + prodId);
+		System.out.println(myDatabase.getProdById(prodId));
+		System.out.println("");
+		
+		BigInteger storeId = BigInteger.valueOf(111);
+		System.out.println("Store with id: " + storeId);
+		System.out.println(myDatabase.getStoreById(storeId));
+		System.out.println("");
+		
+		System.out.println("Getting availability of product of id " + prodId + " in store with id " + storeId + ".");
+		System.out.println(myDatabase.getProdStockInStore(prodId, storeId));
+		System.out.println("");
+		
+		List<Store> avStores;
+		System.out.println("Stores with product of id " + prodId);
+		avStores = myDatabase.getStoresWithProd(prodId);
+		for(int i = 0; i < avStores.size(); i++) {
+			System.out.println(avStores.get(i));
+		}
+		
+		List<Product> avProd;
+		System.out.println("Getting products in store " + storeId);
+		avProd = myDatabase.getStoreProducts(storeId);
+		for(int i = 0; i < avProd.size(); i++) {
+			System.out.println(avProd.get(i));
+		}
+		
+		String keyword = "Pebble Watch";
+		System.out.println("\nGetting product matches for " + keyword);
+		printList(myDatabase.getProductsByKeyword(keyword));
+		
+		
+		keyword = "London";
+		System.out.println("\nGetting store matches for " + keyword);
+		printList(myDatabase.getStoresByKeyword(keyword));
+		
+		keyword = "Surrey";
+		System.out.println("\nGetting store matches for " + keyword);
+		printList(myDatabase.getStoresByKeyword(keyword));
 	}
 	
 }

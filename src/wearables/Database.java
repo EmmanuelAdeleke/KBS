@@ -85,10 +85,10 @@ public class Database {
     
     public List<String> getProdCategories() {
     	List<String> cat = new ArrayList<String>();
-    	cat.add("Watch");
-    	cat.add("Glass");
-    	cat.add("Headphone");
-    	cat.add("Jacket");
+    	cat.add("watch");
+    	cat.add("glass");
+    	cat.add("headphone");
+    	cat.add("jacket");
     	return cat;
     }
     
@@ -124,15 +124,25 @@ public class Database {
     	return val;
     }
     
+    // ------ Product classes by keyword----------
+    
+    public List<String> getProdClassesByKeyword (String keyword){
+    	List<String> categories = getProdCategories();
+    	List<String> catFound = new ArrayList<String>();
+ 
+    	// Check if category matches
+    	for (int i = 0; i < categories.size(); i++) {
+    		if (keyword.contains(categories.get(i))) catFound.add(categories.get(i));
+    	} 
+    	return catFound;
+    }
+    
     // ------ Products by keyword----------
     
     // Returns how much a product matches a keyword. From 0 to 14.
     public int prodKeywordMatch(Product prod, String keyword) {
     	keyword = keyword.toLowerCase();
     	int match = 0;
-    	String category = prod.getCategory().substring(5).toLowerCase(); //Category without the "Smart"
-    	// Check if category matches
-    	if (keyword.contains(category)) match += 1;
     	// Check if keyword mentions the brand or vice versa
     	if (twoWayContain(keyword, prod.getBrand().toLowerCase())) match += 5;
     	// Check if keyword mentions the name and vice versa.
@@ -223,7 +233,7 @@ public class Database {
     }
   //========================== END of content from Keyword ===============================//
     
-    public BigInteger getProdStockInStore(BigInteger prodId, BigInteger storeId) {
+    public int getProdStockInStore(BigInteger prodId, BigInteger storeId) {
     	BigInteger stock = BigInteger.valueOf(0);
     	for	(int i = 0; i < availability.size(); i++){
     		//If same prodId and same store
@@ -233,7 +243,7 @@ public class Database {
     			break;
     		}
     	}
-    	return stock;
+    	return stock.intValue();
     }
     
     public List<Store> getStoresWithProd(BigInteger prodId) {
