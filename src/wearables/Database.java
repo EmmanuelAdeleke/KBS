@@ -261,7 +261,7 @@ public class Database {
   //========================== END of content from Keyword ===============================//
     
     //============================== Getting numbers ===============================//
-    public int getTotalStoreTock(BigInteger storeId) {
+    public int getTotalStoreStock(BigInteger storeId) {
     	List<Product> prodList = getStoreProducts(storeId);
     	int totalStock = 0;
     	for (int i = 0; i < prodList.size(); i++) {
@@ -291,6 +291,34 @@ public class Database {
 			stock += getProdStockInStore(prodId, storesInArea.get(i).getId());
 		}
 		return stock;
+    }
+    
+    public int getProdCategoryStockInCity(String prodCategory, String cityName) {
+    	List<Store> storesInArea = getStoresByCity(cityName);
+    	int totalStock = 0;
+    	Store astore;
+    	
+    	for (int j = 0; j < storesInArea.size(); j++) {
+    		astore = storesInArea.get(j);
+    		List<Product> prodList = getProdInStoreByCategory(astore.getId(), prodCategory);
+	    	for (int i = 0; i< prodList.size(); i++){
+	    		totalStock += getProdStockInStore(prodList.get(i).getId(), astore.getId());
+	    	}
+    	}
+    	
+		return totalStock;
+    }
+    
+    public int getProdCategoryTotalStock(String prodCategory) {
+    	List<Product> prodList = getProdByCategory(prodCategory);
+    	int totalStock = 0;
+    	
+    	for (int i = 0; i < prodList.size(); i++) {
+    		int prodStock = getTotalProductStock(prodList.get(i).getId());
+    		totalStock += prodStock;
+    	}
+    	
+    	return totalStock;
     }
     
     public int getTotalProductStock(BigInteger prodId) {
@@ -334,6 +362,28 @@ public class Database {
     		}
     	}
     	return storesFound;
+    }
+    
+    public List<Store> getStoresWithProdCategory(String category) {
+    	HashMap<BigInteger, Store> storesFound = new HashMap<BigInteger, Store>();
+    	List<Store> storeList= new ArrayList<Store>();
+    	List<Product> prodList;
+    	
+    	prodList = getProdByCategory(category);
+    	for (int i = 0; i < prodList.size(); i++) {
+    		storeList = getStoresWithProd(prodList.get(i).getId());
+    		for (int j = 0; j< storeList.size(); j++){
+    			storesFound.put(storeList.get(i).getId(), storeList.get(i));
+    		}
+    	}
+    	
+    	List<Store> finalStoreList = new ArrayList<Store>();
+    	// Transfer the LinkedHashSet to an ArrayList
+    	for (BigInteger key : storesFound.keySet()) {
+    	    finalStoreList.add(storesFound.get(key));
+    	}
+    	
+    	return finalStoreList;
     }
     
     //============================== Getting products ===============================//

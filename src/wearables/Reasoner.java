@@ -198,7 +198,7 @@ public class Reasoner {
 		String subj2 = "";
 		String answer = "";
 		
-		// # of such product...
+		// ++++ # of such product...
 		if (sProdScore > 0) {
 			Product prod = qAn.productsFound.get(0);
 			subj1 = prod.getName();
@@ -211,7 +211,6 @@ public class Reasoner {
 			} 
 			// in such areas (Could be more than one)
 			else if (storeAreaScore > 0) {
-				amount = 0;
 				String cityListing = "";
 				String storeListing = "";
 				for (int i = 0; i < qAn.storeAreasFound.size(); i++) {
@@ -240,20 +239,57 @@ public class Reasoner {
 				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
 			}
 		}
-		//# in a specific store store
+		// ++++ # of products of a specific category
+		else if (prodCategoryScore > 0) {
+			subj1 = qAn.prodCategoriesFound.get(0);
+			
+			// in such store
+			if (sStoreScore >0) {
+				Store store = qAn.storesFound.get(0);
+				List<Product> prodList = myDatabase.getProdInStoreByCategory(store.getId(), subj1);
+				amount = prodList.size();
+				subj2 = qAn.storesFound.get(0).getName();
+				answer = "We have " + amount + " " + subj1 + "s at " + subj2 + " store.";
+			} 
+			// in such areas (Could be more than one)
+			else if (storeAreaScore > 0) {
+				amount = 0;
+				String cityListing = "";
+				String storeListing = "";
+				for (int i = 0; i < qAn.storeAreasFound.size(); i++) {
+					String cityName = qAn.storeAreasFound.get(i);
+					amount += myDatabase.getProdCategoryStockInCity(subj1, cityName);
+					storeListing += "\n" + listToString(myDatabase.getStoresByCity(cityName));
+					
+					//If list has more than one item and it is the last item in the list
+					if (qAn.storeAreasFound.size() > 1 && qAn.storeAreasFound.size() - i == 1){
+						cityListing += " and";
+					}
+					cityListing += cityName;
+				}
+				answer = "We have " + amount + " " + subj1 + "s in " + cityListing + ".";
+				answer += "\nYou can find it at these stores: " + storeListing;
+			} 
+			// (# of stores that have such product category)
+			else if (storeScore > 0) {
+				List<Store> storeList = myDatabase.getStoresWithProdCategory(subj1);
+				amount = storeList.size();
+				answer = "There are " + amount + " stores with " + subj1 + "s in stock.\nThese are:\n" + listToString(storeList);
+			}
+			// overall
+			else if (sProdScore > 0) {
+				amount = myDatabase.getProdCategoryTotalStock(subj1);
+				answer = "We have " + amount + " " + subj1 + "s distributed across our stores.";
+			}
+		}
+		// ++++ # in a specific store store
 		else if (sStoreScore > 0) {
 			Store store = qAn.storesFound.get(0);
-			// # of a prod class in specific store
-			if (prodCategoryScore > 0) {
-				String categoryFound = qAn.prodCategoriesFound.get(0);
-				List<Product> prodList = myDatabase.getProdInStoreByCategory(store.getId(), categoryFound);
-				answer = "We have " + amount + " " + categoryFound + "s at the " + store.getName() + " store.";
-			}
 			// # of products in general in specific store
 			else {
 				BigInteger storeId = qAn.storesFound.get(0).getId();
 				String storeName = qAn.storesFound.get(0).getName();
-				amount = myDatabase.getTotalStoreTock(storeId);
+				amount = myDatabase.getTotalStoreStock(storeId);
 				List<Product> prodList = myDatabase.getStoreProducts(storeId);
 				
 				answer = "There are " + amount + " products at the " + storeName + ", amongst which you can find:\n" + listToString(prodList);
