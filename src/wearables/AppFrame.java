@@ -131,7 +131,17 @@ public class AppFrame extends JFrame {
 		contentPane.add(textField);
 		textField.setColumns(10);
 
-
+		textField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String question = textField.getText();
+				textArea.setText(question);
+				chatLog.append("> " + question + "\n");
+				chatLog.append(reasoner.generateAnswer(question) + "\n");
+				textField.setText("");
+				textArea.setText(chatLog.toString() + "\n");
+			}
+		});
 
 	}
 }
