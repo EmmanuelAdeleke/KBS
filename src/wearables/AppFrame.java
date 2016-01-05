@@ -76,7 +76,8 @@ public class AppFrame extends JFrame {
 		
 		final Image imgProduct = new ImageIcon(this.getClass().getResource("/wearable.png")).getImage();
 		final JLabel lblProduct = new JLabel("");
-		lblProduct.setBounds(650, 200, 300, 300);
+		lblProduct.setHorizontalAlignment(SwingConstants.CENTER);
+		lblProduct.setBounds(667, 210, 300, 300);
 		getContentPane().add(lblProduct);
 		
 		JLabel lblNewLabel = new JLabel("WearablesDirect");
@@ -132,11 +133,28 @@ public class AppFrame extends JFrame {
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
+		final JLabel lblProductTitle = new JLabel("");
+		lblProductTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblProductTitle.setForeground(Color.WHITE);
+		lblProductTitle.setFont(new Font("Lantinghei TC", Font.PLAIN, 23));
+		lblProductTitle.setBounds(628, 179, 366, 34);
+		contentPane.add(lblProductTitle);
+		
+		final JLabel lblDescription = new JLabel();
+		lblDescription.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDescription.setForeground(Color.WHITE);
+		lblDescription.setFont(new Font("Lantinghei TC", Font.PLAIN, 13));
+		lblDescription.setBounds(661, 497, 300, 105);
+		
+		contentPane.add(lblDescription);
+		
 		// Set action listener (onEnter) for textField
 		textField.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				Image imgProduct;
 				
 				// If textField is empty...
 				if (textField.getText().trim().isEmpty())
@@ -148,56 +166,77 @@ public class AppFrame extends JFrame {
 					chatLog.append("> " + question + "\n");
 					// Append the answer to the chat log
 					chatLog.append(reasoner.generateAnswer(question) + "\n");
-//					chatLog.append(reasoner.analyseQuestion(question).productsFound.size() + "here");
-//					chatLog.append(reasoner.analyseQuestion(question).productsFound.get(0));
-//					chatLog.append(reasoner.getSingleProduct(question));
-					//Product product;
-					if (reasoner.analyseQuestion(question).productsFound.size() > 1) {
+					
+					System.out.println(reasoner.analyseQuestion(question).productsFound.size());
+					
+					if (reasoner.analyseQuestion(question).productsFound.size() == 0) {
 						System.out.println("More than one found");
 					}
-					else {
+					else if (reasoner.analyseQuestion(question).productsFound.size() == 1) {
+						lblProduct.setVisible(true);
 						Product product = reasoner.getSingleProduct(question);
 						
 						switch(product.name) {
 						case "Pebble Time":
-							System.out.println("YES");
-							System.out.println(product.name);
-							Image imgProduct = new ImageIcon(this.getClass().getResource("/pebble.png")).getImage();
+							imgProduct = new ImageIcon(this.getClass().getResource("/pebble.png")).getImage();
 							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "Moto 360 2015":
+							imgProduct = new ImageIcon(this.getClass().getResource("/moto2015.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "Apple Watch Sport":
+							imgProduct = new ImageIcon(this.getClass().getResource("/applewatch.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "CastAR":
+							imgProduct = new ImageIcon(this.getClass().getResource("/castar.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "Laster SeeThru":
+							imgProduct = new ImageIcon(this.getClass().getResource("/lasterseethru.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "Sony MW1 Smart Headset Pro":
+							imgProduct = new ImageIcon(this.getClass().getResource("/sonyheadphones.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "The White Dash":
+							imgProduct = new ImageIcon(this.getClass().getResource("/whitedash.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "Travel Jacket":
+							imgProduct = new ImageIcon(this.getClass().getResource("/traveljacket.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "Travel Lite":
+							imgProduct = new ImageIcon(this.getClass().getResource("/travellite.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						default: 
 							System.out.println("None");
 						}
 						
-						
+						lblProductTitle.setText(product.name);
+						lblDescription.setText("<html> <body style='text-align: center;'>" + product.description + " </body> </html>");
 						System.out.println(reasoner.getSingleProduct(question));
 						System.out.println("Just one found mate");
 					}
+					else {
+						lblProductTitle.setText("");
+						lblProduct.setVisible(false);
+						lblDescription.setText("");
+					}
+		
 				}
 				
 				// Reset the text field

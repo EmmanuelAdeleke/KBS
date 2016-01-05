@@ -123,7 +123,9 @@ public class Reasoner {
 	
 
 	public Product getSingleProduct(String question) {
-		return analyseQuestion(question).productsFound.get(0);
+		Product product = analyseQuestion(question).productsFound.get(0);
+		
+		return product;
 	}
 	
 	public String generateAnswer(String question) {
@@ -605,7 +607,7 @@ public class Reasoner {
 		public String trimmedQuestion;
 		
 		//Constructor setting everything.
-		public AnalysisResult(List<Product> productsFound, List<String> prodCategoriesFound, List<Store> storesFound, 
+		protected AnalysisResult(List<Product> productsFound, List<String> prodCategoriesFound, List<Store> storesFound, 
 				List<String> storeAreasFound, HashMap<String, Integer> detectedClasses, String trimmedQuestion) {
 			this.productsFound = productsFound;
 			this.storesFound = storesFound;
