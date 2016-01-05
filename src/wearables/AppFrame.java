@@ -162,12 +162,46 @@ public class AppFrame extends JFrame {
 				else {
 					// Get text from textField and store in question
 					String question = textField.getText();
+					
 					// Append question to the chat log
 					chatLog.append("> " + question + "\n");
+					
 					// Append the answer to the chat log
 					chatLog.append(reasoner.generateAnswer(question) + "\n");
 					
 					System.out.println(reasoner.analyseQuestion(question).productsFound.size());
+					
+					if (reasoner.analyseQuestion(question).storesFound.size() == 0) {
+						System.out.println("More than one found");
+					}
+					else if (reasoner.analyseQuestion(question).storesFound.size() == 1) {
+						lblProduct.setVisible(true);
+						Store store = reasoner.getSingleStore(question);
+						
+						switch(store.name) {
+						case "PC Galaxy":
+							imgProduct = new ImageIcon(this.getClass().getResource("/king.jpg")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Wearables for you":
+							imgProduct = new ImageIcon(this.getClass().getResource("/king.jpg")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Gadgetology":
+							imgProduct = new ImageIcon(this.getClass().getResource("/king.jpg")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+						}
+						lblProductTitle.setText(store.name);
+						lblDescription.setText("<html> <body style='text-align: center;'>" + store.address + " </body> </html>");
+					}
+					else {
+						lblProductTitle.setText("");
+						lblProduct.setVisible(false);
+						lblDescription.setText("");
+					}
 					
 					if (reasoner.analyseQuestion(question).productsFound.size() == 0) {
 						System.out.println("More than one found");
@@ -221,9 +255,7 @@ public class AppFrame extends JFrame {
 							imgProduct = new ImageIcon(this.getClass().getResource("/travellite.png")).getImage();
 							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
-							
-						default: 
-							System.out.println("None");
+						
 						}
 						
 						lblProductTitle.setText(product.name);

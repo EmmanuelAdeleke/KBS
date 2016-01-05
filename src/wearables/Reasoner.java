@@ -121,11 +121,13 @@ public class Reasoner {
 		questionMapping.put("thanks", "farewell");
 	}
 	
-
+	// Return single product at 0
 	public Product getSingleProduct(String question) {
-		Product product = analyseQuestion(question).productsFound.get(0);
-		
-		return product;
+		return analyseQuestion(question).productsFound.get(0);
+	}
+	
+	public Store getSingleStore(String question) {
+		return analyseQuestion(question).storesFound.get(0);
 	}
 	
 	public String generateAnswer(String question) {
