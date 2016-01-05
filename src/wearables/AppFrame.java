@@ -73,7 +73,12 @@ public class AppFrame extends JFrame {
 		lblQuestion.setIcon(new ImageIcon(imgQuestion));
 		lblQuestion.setBounds(861, 22, 100, 100);
 		getContentPane().add(lblQuestion);
-
+		
+		final Image imgProduct = new ImageIcon(this.getClass().getResource("/wearable.png")).getImage();
+		final JLabel lblProduct = new JLabel("");
+		lblProduct.setBounds(650, 200, 300, 300);
+		getContentPane().add(lblProduct);
+		
 		JLabel lblNewLabel = new JLabel("WearablesDirect");
 		lblNewLabel.setFont(new Font("Lantinghei TC", Font.PLAIN, 42));
 		lblNewLabel.setForeground(Color.WHITE);
@@ -143,6 +148,56 @@ public class AppFrame extends JFrame {
 					chatLog.append("> " + question + "\n");
 					// Append the answer to the chat log
 					chatLog.append(reasoner.generateAnswer(question) + "\n");
+//					chatLog.append(reasoner.analyseQuestion(question).productsFound.size() + "here");
+//					chatLog.append(reasoner.analyseQuestion(question).productsFound.get(0));
+//					chatLog.append(reasoner.getSingleProduct(question));
+					//Product product;
+					if (reasoner.analyseQuestion(question).productsFound.size() > 1) {
+						System.out.println("More than one found");
+					}
+					else {
+						Product product = reasoner.getSingleProduct(question);
+						
+						switch(product.name) {
+						case "Pebble Time":
+							System.out.println("YES");
+							System.out.println(product.name);
+							Image imgProduct = new ImageIcon(this.getClass().getResource("/pebble.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Moto 360 2015":
+							break;
+							
+						case "Apple Watch Sport":
+							break;
+							
+						case "CastAR":
+							break;
+							
+						case "Laster SeeThru":
+							break;
+							
+						case "Sony MW1 Smart Headset Pro":
+							break;
+							
+						case "The White Dash":
+							break;
+							
+						case "Travel Jacket":
+							break;
+							
+						case "Travel Lite":
+							break;
+							
+						default: 
+							System.out.println("None");
+						}
+						
+						
+						System.out.println(reasoner.getSingleProduct(question));
+						System.out.println("Just one found mate");
+					}
 				}
 				
 				// Reset the text field
