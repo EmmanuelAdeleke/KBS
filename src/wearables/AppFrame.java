@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Insets;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,10 +13,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import javax.swing.SwingConstants;
 
 public class AppFrame extends JFrame {
@@ -44,6 +50,7 @@ public class AppFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public AppFrame() {
 		
 		// Instantiate reasoner object
@@ -58,7 +65,7 @@ public class AppFrame extends JFrame {
 
 		// Create str builder object
 		final StringBuilder chatLog = new StringBuilder();
-
+		
 		// Configure JFrame window //
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 800);
@@ -123,7 +130,7 @@ public class AppFrame extends JFrame {
 		lblEnter.setBounds(270, 684, 100, 16);
 		contentPane.add(lblEnter);
 		
-		final JTextArea textArea = new JTextArea();
+		final JTextArea textArea = new JTextArea(getWelcomeMessage());
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(false);
 		textArea.setMargin(new Insets(10,10,10,10));
@@ -144,8 +151,7 @@ public class AppFrame extends JFrame {
 		lblDescription.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDescription.setForeground(Color.WHITE);
 		lblDescription.setFont(new Font("Lantinghei TC", Font.PLAIN, 13));
-		lblDescription.setBounds(661, 497, 300, 105);
-		
+		lblDescription.setBounds(667, 490, 300, 90);
 		contentPane.add(lblDescription);
 		
 		// Set action listener (onEnter) for textField
@@ -177,7 +183,6 @@ public class AppFrame extends JFrame {
 					else if (reasoner.analyseQuestion(question).storesFound.size() == 1) {
 						lblProduct.setVisible(true);
 						Store store = reasoner.getSingleStore(question);
-						
 						switch(store.name) {
 						case "PC Galaxy":
 							imgProduct = new ImageIcon(this.getClass().getResource("/king.jpg")).getImage();
@@ -195,7 +200,8 @@ public class AppFrame extends JFrame {
 							break;
 						}
 						lblProductTitle.setText(store.name);
-						lblDescription.setText("<html> <body style='text-align: center;'>" + store.address + " </body> </html>");
+						lblDescription.setText("<html> <body style='text-align: center;'>" + store.address + 
+								", " + store.region + ", " + store.city + " " + store.postcode + " </body> </html>");
 					}
 					else {
 						lblProductTitle.setText("");
@@ -255,7 +261,6 @@ public class AppFrame extends JFrame {
 							imgProduct = new ImageIcon(this.getClass().getResource("/travellite.png")).getImage();
 							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
-						
 						}
 						
 						lblProductTitle.setText(product.name);
@@ -268,15 +273,35 @@ public class AppFrame extends JFrame {
 						lblProduct.setVisible(false);
 						lblDescription.setText("");
 					}
-		
 				}
 				
 				// Reset the text field
 				textField.setText("");
+				
 				// Display chat log to the text area
 				textArea.setText(chatLog.toString() + "\n");
 			}
 		});
-
+		
 	}
+	public String getWelcomeMessage() {
+		Date date = new Date();   // given date
+		Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+		calendar.setTime(date);   // assigns calendar to given date
+		
+		
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		
+		if (hour >= 0 && hour <= 11) {
+			return "Good morning, key in your questions and I will gladly help you..";
+		}
+		else if (hour >= 12 && hour <= 17){
+			return "Good afternoon, type in your questions and I will try and assist";
+		}
+		else {
+			return "Good evening, get started by inputting your questions below!";
+		}
+		
+	}
+
 }
