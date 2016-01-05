@@ -185,12 +185,12 @@ public class AppFrame extends JFrame {
 							break;
 							
 						case "Wearables for you":
-							imgProduct = new ImageIcon(this.getClass().getResource("/king.jpg")).getImage();
+							imgProduct = new ImageIcon(this.getClass().getResource("/wearables.jpg")).getImage();
 							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 							
 						case "Gadgetology":
-							imgProduct = new ImageIcon(this.getClass().getResource("/king.jpg")).getImage();
+							imgProduct = new ImageIcon(this.getClass().getResource("/gadgetology.jpg")).getImage();
 							lblProduct.setIcon(new ImageIcon(imgProduct));
 							break;
 						}
