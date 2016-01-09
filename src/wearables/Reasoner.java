@@ -17,7 +17,7 @@ public class Reasoner {
 	public static File xmlFile;
 	private static Scanner reader;
 	
-	// Lists of synonyms
+	// Lists of synonyms.
 	public Vector<String> lastSubjectSyn = new Vector<String>(); 
 	public Vector<String> productSyn = new Vector<String>(); 
 	public Vector<String> storeSyn = new Vector<String>(); 
