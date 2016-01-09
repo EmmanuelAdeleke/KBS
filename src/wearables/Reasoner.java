@@ -84,33 +84,29 @@ public class Reasoner {
 		
 		questionMapping.put("postcode", "where");
 		
-		questionMapping.put("how many", "howmany");
+		questionMapping.put("what do you have", "describe");
 		
-		questionMapping.put("number of", "howmany");
+		questionMapping.put("what", "describe");
 		
-		questionMapping.put("amount of", "howmany");
+		questionMapping.put("how many", "describe");
 		
-		questionMapping.put("count ", "howmany");
+		questionMapping.put("number of", "describe");
 		
-		questionMapping.put("total ", "howmany");
+		questionMapping.put("amount of", "describe");
+		
+		questionMapping.put("count ", "describe");
+		
+		questionMapping.put("total ", "describe");
 	
-		questionMapping.put("there any ", "howmany");
+		questionMapping.put("there any ", "describe");
 	
-		questionMapping.put("have any ", "howmany");
+		questionMapping.put("have any ", "describe");
 		
-		questionMapping.put("how much", "howmuch");
+		questionMapping.put("show ", "describe");
 		
-		questionMapping.put("s the cost", "howmuch");
+		questionMapping.put("describe", "describe");
 		
-		questionMapping.put("price", "howmuch");
-		
-		questionMapping.put("show ", "show");
-		
-		questionMapping.put("do you have any", "show");
-		
-		questionMapping.put("describe", "show");
-		
-		questionMapping.put("store open", "show");	
+		questionMapping.put("store open", "describe");	
 		
 		questionMapping.put("bye", "farewell");
 		
@@ -149,8 +145,14 @@ public class Reasoner {
 		
 		// Answer accordingly
 		switch (questionType) {
-	        case "howmany":
-	        	answer = answerHowMany(qAn);
+	        case "describe":
+	        	answer = answerDescribe(qAn);
+	            break;
+	        case "farewell":
+	        	answer = answerFarewell(qAn);
+	            break;
+	        case "where":
+	        	answer = answerWhere(qAn);
 	            break;
 	        default: 
 	        	answer = answerUnknownCase(qAn);
@@ -164,7 +166,8 @@ public class Reasoner {
 	//============================ Functions to create Answers ====================================
 	//=============================================================================================
 	
-	public String answerHowMany(AnalysisResult qAn) {
+	//============== HOW MANY ================
+	public String answerDescribe(AnalysisResult qAn) {
 		HashMap<String, Integer> detectedClasses = qAn.detectedClasses; //Classes detected and their match score
 
 		int prodScore = detectedClasses.getOrDefault("Product", 0);
@@ -277,7 +280,6 @@ public class Reasoner {
 		//// # of products in general ...
 		else if (prodScore > 0) {
 			lastSubjectType = "Product";
-			
 			// .. in specific area
 			if (storeAreaScore > 0) {
 				String cityName = qAn.storeAreasFound.get(0);
@@ -317,10 +319,95 @@ public class Reasoner {
 		setLastSubjectList(lastSubjectType, qAn);
 		return answer;
 	}
+	//============== END OF HOW MANY ================
+	
+	//============== WHERE ================
+	public String answerWhere(AnalysisResult qAn) {
+		HashMap<String, Integer> detectedClasses = qAn.detectedClasses; //Classes detected and their match score
 
-	public String answerShow(AnalysisResult qAn) {
-		return "to be implemented";		
+
+		int prodCategoryScore = detectedClasses.getOrDefault("ProductCategory", 0);
+		int storeScore = detectedClasses.getOrDefault("Store", 0);
+		int sProdScore = detectedClasses.getOrDefault("SpecificProduct", 0);
+
+		int storeAreaScore = detectedClasses.getOrDefault("StoreArea", 0);
+		int amount = 0;
+		String subj1 = "";
+		String answer = "";
+		
+		//// such product...
+		// (# of stores that have such product)
+		if (sProdScore > 0) {
+			Product prod = qAn.productsFound.get(0);
+			subj1 = prod.getName();
+			lastSubjectType = "SpecificProduct";
+			List<Store> storeList = myDatabase.getStoresWithProd(prod.getId());
+			amount = storeList.size();
+			answer = "There are " + amount + " stores with " + prod.getName() + " in stock.\nThese are:\n" + listToString(storeList);
+		}
+		//// a specific category
+		else if (prodCategoryScore > 0) {
+			subj1 = qAn.prodCategoriesFound.get(0);
+			lastSubjectType = "ProductCategory";	
+			// ..in such areas (Could be more than one)
+			if (storeAreaScore > 0) {
+				amount = 0;
+				String cityListing = "";
+				String storeListing = "";
+				for (int i = 0; i < qAn.storeAreasFound.size(); i++) {
+					String cityName = qAn.storeAreasFound.get(i);
+					amount += myDatabase.getProdCategoryStockInCity(subj1, cityName);
+					storeListing += "\n" + listToString(myDatabase.getStoresByCity(cityName));
+					
+					//If list has more than one item and it is the last item in the list
+					if (qAn.storeAreasFound.size() > 1 && qAn.storeAreasFound.size() - i == 1){
+						cityListing += " and";
+					}
+					cityListing += cityName;
+				}
+				answer = "We have " + amount + " " + getPlural(subj1) + " in " + cityListing + ".";
+				answer += "\nYou can find it at these stores: " + storeListing;
+			} 
+			// (stores that have such product category)
+			else {
+				List<Store> storeList = myDatabase.getStoresWithProdCategory(subj1);
+				amount = storeList.size();
+				answer = "There are " + amount + " stores with " + getPlural(subj1) + " in stock.\nThese are:\n" + listToString(storeList);
+			}
+		}
+		// stores..
+		else if (storeScore > 0) {
+			lastSubjectType = "Store";
+			
+			// .. in specific area
+			if (storeAreaScore > 0) {
+				String cityName = qAn.storeAreasFound.get(0);
+				amount = myDatabase.getStoresByCity(cityName).size();
+				List<Store> storeList = myDatabase.getStoresByCity(cityName);
+				answer = "We have " + amount + " stores in " + cityName + ".\nThese are:\n" + listToString(storeList);
+			}
+			// .. in general
+			else {
+				amount = myDatabase.getStores().size();
+				answer = "We have " + amount + " stores distributed throughout all of the UK.";
+			}		
+		}
+		// If is none of the above, then I don't know.
+		else {
+			answer = "I didn't quite get the end there. What exactly would you like to know the amount of?";
+		}
+		
+		setLastSubjectList(lastSubjectType, qAn);
+		return answer;
 	}
+	//============== END OF WHERE================
+	
+	//============== Farewell ================
+	public String answerFarewell(AnalysisResult qAn) {
+		return "Bye bye. Don't forget to visit our website at www.theWerablesStore.co.uk";
+	}
+	
+	//============== Unknown case ================
 	public String answerUnknownCase(AnalysisResult qAn) {
 		String answer = "";
 		// Let's give a generic answer with matching items.			
@@ -364,7 +451,7 @@ public class Reasoner {
 		String trimmedQuestion = question; // Question without class synonyms found.
 		int score; // hold scores temporarily
 		
-		// This hash map will hold detected class name and their match score.
+		// This hash map will hold detected class names and their match score.
 		HashMap<String, Integer> detectedClasses = new HashMap<String, Integer>();
 		
 		// List of synonyms lists
