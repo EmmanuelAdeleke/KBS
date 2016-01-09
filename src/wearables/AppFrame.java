@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Insets;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,10 +13,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import javax.swing.SwingConstants;
 
 public class AppFrame extends JFrame {
@@ -44,6 +50,7 @@ public class AppFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public AppFrame() {
 		
 		// Instantiate reasoner object
@@ -58,7 +65,7 @@ public class AppFrame extends JFrame {
 
 		// Create str builder object
 		final StringBuilder chatLog = new StringBuilder();
-
+		
 		// Configure JFrame window //
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 800);
@@ -73,7 +80,13 @@ public class AppFrame extends JFrame {
 		lblQuestion.setIcon(new ImageIcon(imgQuestion));
 		lblQuestion.setBounds(861, 22, 100, 100);
 		getContentPane().add(lblQuestion);
-
+		
+		final Image imgProduct = new ImageIcon(this.getClass().getResource("/wearable.png")).getImage();
+		final JLabel lblProduct = new JLabel("");
+		lblProduct.setHorizontalAlignment(SwingConstants.CENTER);
+		lblProduct.setBounds(667, 210, 300, 300);
+		getContentPane().add(lblProduct);
+		
 		JLabel lblNewLabel = new JLabel("WearablesDirect");
 		lblNewLabel.setFont(new Font("Lantinghei TC", Font.PLAIN, 42));
 		lblNewLabel.setForeground(Color.WHITE);
@@ -117,7 +130,7 @@ public class AppFrame extends JFrame {
 		lblEnter.setBounds(270, 684, 100, 16);
 		contentPane.add(lblEnter);
 		
-		final JTextArea textArea = new JTextArea();
+		final JTextArea textArea = new JTextArea(getWelcomeMessage());
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(false);
 		textArea.setMargin(new Insets(10,10,10,10));
@@ -127,11 +140,27 @@ public class AppFrame extends JFrame {
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
+		final JLabel lblProductTitle = new JLabel("");
+		lblProductTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblProductTitle.setForeground(Color.WHITE);
+		lblProductTitle.setFont(new Font("Lantinghei TC", Font.PLAIN, 23));
+		lblProductTitle.setBounds(628, 179, 366, 34);
+		contentPane.add(lblProductTitle);
+		
+		final JLabel lblDescription = new JLabel();
+		lblDescription.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDescription.setForeground(Color.WHITE);
+		lblDescription.setFont(new Font("Lantinghei TC", Font.PLAIN, 13));
+		lblDescription.setBounds(667, 490, 300, 90);
+		contentPane.add(lblDescription);
+		
 		// Set action listener (onEnter) for textField
 		textField.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				Image imgProduct;
 				
 				// If textField is empty...
 				if (textField.getText().trim().isEmpty())
@@ -139,18 +168,140 @@ public class AppFrame extends JFrame {
 				else {
 					// Get text from textField and store in question
 					String question = textField.getText();
+					
 					// Append question to the chat log
 					chatLog.append("> " + question + "\n");
+					
 					// Append the answer to the chat log
 					chatLog.append(reasoner.generateAnswer(question) + "\n");
+					
+					System.out.println(reasoner.analyseQuestion(question).productsFound.size());
+					
+					if (reasoner.analyseQuestion(question).storesFound.size() == 0) {
+						System.out.println("More than one found");
+					}
+					else if (reasoner.analyseQuestion(question).storesFound.size() == 1) {
+						lblProduct.setVisible(true);
+						Store store = reasoner.getSingleStore(question);
+						switch(store.name) {
+						case "PC Galaxy":
+							imgProduct = new ImageIcon(this.getClass().getResource("/king.jpg")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Wearables for you":
+							imgProduct = new ImageIcon(this.getClass().getResource("/wearables.jpg")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Gadgetology":
+							imgProduct = new ImageIcon(this.getClass().getResource("/gadgetology.jpg")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+						}
+						lblProductTitle.setText(store.name);
+						lblDescription.setText("<html> <body style='text-align: center;'>" + store.address + 
+								", " + store.region + ", " + store.city + " " + store.postcode + " </body> </html>");
+					}
+					else {
+						lblProductTitle.setText("");
+						lblProduct.setVisible(false);
+						lblDescription.setText("");
+					}
+					
+					if (reasoner.analyseQuestion(question).productsFound.size() == 0) {
+						System.out.println("More than one found");
+					}
+					else if (reasoner.analyseQuestion(question).productsFound.size() == 1) {
+						lblProduct.setVisible(true);
+						Product product = reasoner.getSingleProduct(question);
+						
+						switch(product.name) {
+						case "Pebble Time":
+							imgProduct = new ImageIcon(this.getClass().getResource("/pebble.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Moto 360 2015":
+							imgProduct = new ImageIcon(this.getClass().getResource("/moto2015.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Apple Watch Sport":
+							imgProduct = new ImageIcon(this.getClass().getResource("/applewatch.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "CastAR":
+							imgProduct = new ImageIcon(this.getClass().getResource("/castar.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Laster SeeThru":
+							imgProduct = new ImageIcon(this.getClass().getResource("/lasterseethru.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Sony MW1 Smart Headset Pro":
+							imgProduct = new ImageIcon(this.getClass().getResource("/sonyheadphones.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "The White Dash":
+							imgProduct = new ImageIcon(this.getClass().getResource("/whitedash.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Travel Jacket":
+							imgProduct = new ImageIcon(this.getClass().getResource("/traveljacket.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+							
+						case "Travel Lite":
+							imgProduct = new ImageIcon(this.getClass().getResource("/travellite.png")).getImage();
+							lblProduct.setIcon(new ImageIcon(imgProduct));
+							break;
+						}
+						
+						lblProductTitle.setText(product.name);
+						lblDescription.setText("<html> <body style='text-align: center;'>" + product.description + " </body> </html>");
+						System.out.println(reasoner.getSingleProduct(question));
+						System.out.println("Just one found mate");
+					}
+					else {
+						lblProductTitle.setText("");
+						lblProduct.setVisible(false);
+						lblDescription.setText("");
+					}
 				}
 				
 				// Reset the text field
 				textField.setText("");
+				
 				// Display chat log to the text area
 				textArea.setText(chatLog.toString() + "\n");
 			}
 		});
-
+		
 	}
+	public String getWelcomeMessage() {
+		Date date = new Date();   // given date
+		Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+		calendar.setTime(date);   // assigns calendar to given date
+		
+		
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		
+		if (hour >= 0 && hour <= 11) {
+			return "Good morning, key in your questions and I will gladly help you..";
+		}
+		else if (hour >= 12 && hour <= 17){
+			return "Good afternoon, type in your questions and I will try and assist";
+		}
+		else {
+			return "Good evening, get started by inputting your questions below!";
+		}
+		
+	}
+
 }
