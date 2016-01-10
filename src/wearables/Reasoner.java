@@ -66,6 +66,7 @@ public class Reasoner {
 		lastSubjectSyn.add(" it!");
 		lastSubjectSyn.add(" it ");
 		lastSubjectSyn.add(" those");
+		lastSubjectSyn.add(" these");
 		lastSubjectSyn.add(" they");
 		lastSubjectSyn.add(" them");
 		
@@ -107,7 +108,7 @@ public class Reasoner {
 	
 		questionMapping.put("have any ", "describe");
 		
-		questionMapping.put("show ", "describe");
+		questionMapping.put("list ", "describe");
 		
 		questionMapping.put("describe", "describe");
 		
@@ -484,7 +485,7 @@ public class Reasoner {
 			if (sProdScore > 0) {
 				Product prod = qAn.productsFound.get(0);
 				subj1 = prod.getName();
-				lastSubjectType = "SpecificProduct";
+				lastSubjectType = "Store";
 				List<Store> storeList = myDatabase.getStoresWithProd(prod.getId());
 				amount = storeList.size();
 				answer = "There are " + amount + " stores with " + prod.getName() + " in stock.\nThese are:\n" + listToString(storeList);
@@ -514,6 +515,7 @@ public class Reasoner {
 				} 
 				// (stores that have such product category)
 				else {
+					lastSubjectType = "Store";
 					List<Store> storeList = myDatabase.getStoresWithProdCategory(subj1);
 					amount = storeList.size();
 					answer = "There are " + amount + " stores with " + getPlural(subj1) + " in stock.\nThese are:\n" + listToString(storeList);

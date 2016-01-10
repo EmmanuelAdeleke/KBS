@@ -89,7 +89,7 @@
     <Availability>
         <product_id>6</product_id>
         <store_id>113</store_id>
-        <quantity>0</quantity>
+        <quantity>5</quantity>
     </Availability>
     <Availability>
         <product_id>7</product_id>
@@ -215,7 +215,7 @@
         <address>30 The Broadway</address>
         <postcode>W5 2NP</postcode>
         <city>London</city>
-        <region>Greater London</region>
+        <region>London</region>
         <phone_number>0208519376</phone_number>
         <opening_times>Mon - Fri, 9am - 5pm</opening_times>
         <lat>51.513965</lat>
@@ -226,8 +226,8 @@
         <name>Gadgetology</name>
         <address>4006 Ariel Way</address>
         <postcode>W12 7GF</postcode>
-        <city>London</city>
-        <region>Greater London</region>
+        <city>New Castle</city>
+        <region>New Castle</region>
         <phone_number>0203371230</phone_number>
         <opening_times>Mon - Sat, 9am - 6pm</opening_times>
         <lat>51.507972</lat>
