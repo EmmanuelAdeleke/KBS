@@ -12,6 +12,7 @@ ID: 6	Category: SmartHeadphones	Name: Sony MW1 Smart Headset Pro	Brand: Sony	Col
 **Enter a question:** *How many of these Sony MW1 do you have in total?*
 
 We have 17 Sony MW1 Smart Headset Proes distributed across all of our stores.
+
 **Enter a question:** *How many of them are in London?*
 
 We have 9 Sony MW1 Smart Headset Proes in London.
@@ -23,12 +24,15 @@ ID: 113 Name: PC Galaxy	Address: Wood St, King	Postcode: KT1 1TP	City: London	Re
 
 store?
 We have 5 Sony MW1 Smart Headset Pros at PC Galaxy store.
+
 **Enter a question:** *Do you have smart watches?*
 
 We have 183 SmartWatches distributed across our stores.
+
 **Enter a question:** *How about smart jackets?*
 
 We have 107 SmartJackets distributed across our stores.
+
 **Enter a question:** *List all stores that have it, please.*
 
 There are 2 stores with SmartJackets in stock.
@@ -47,6 +51,7 @@ ID: 111 Name: Wearables for you	Address: 30 The Broadway	Postcode: W5 2NP	City: 
 **Enter a question:** *What is the amount of it at Gadgetology?*
 
 We have 3 SmartWatches at Gadgetology store.
+
 **Enter a question:** *Actually, now I got curious. How many products do you *
 
 have at the gadgetology store?
@@ -64,6 +69,7 @@ ID: 9	Category: SmartJackets	Name: Travel Lite	Brand: BauBax	Colour: Olive	Descr
 **Enter a question:** *And how many products do you have in all of London?*
 
 There is a total of 361 products in our stores in London.
+
 **Enter a question:** *Sure sounds like a lot. Where in all of that can I find *
 
 my smart watches?
@@ -163,6 +169,7 @@ ID: 113 Name: PC Galaxy	Address: Wood St, King	Postcode: KT1 1TP	City: London	Re
 **Enter a question:** *Wow you are so efficient!*
 
 Uh, I didn't quite catch that. Can you rephrase it, please.
+
 **Enter a question:** *Nah, nevermind. That was all. Thanks.*
 
 Bye bye. Don't forget to visit our website at www.theWerablesStore.co.uk
